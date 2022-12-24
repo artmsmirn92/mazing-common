@@ -1,0 +1,19 @@
+{
+  "name": "com.mazing.common",
+  "version": "0.0.1",
+  "displayName": "Common Library",
+  "description": "Common data types and classes",
+  "unity": "2021.3",
+  "unityRelease": "16f1",
+    "dependencies": {
+    "com.unity.inputsystem": "1.4.4",
+    "com.unity.textmeshpro": "3.0.6",
+    "com.unity.purchasing": "4.5.1",
+    "com.unity.mobile.notifications": "2.1.0"
+ },
+  "author": {
+    "name": "Mazing Labs",
+    "email": "mgc0mob@gmail.com",
+    "url": "http://www.mazinglabs.net/"
+  }
+}

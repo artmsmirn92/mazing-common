@@ -1,0 +1,16 @@
+{
+    "name": "Mazing.Common.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:1af057b64d7e7cd449ca1be8fc25688c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
