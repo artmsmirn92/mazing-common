@@ -1,6 +1,6 @@
 {
   "name": "com.mazing.common",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "displayName": "Common Library",
   "description": "Common data types and classes",
   "unity": "2021.3",
