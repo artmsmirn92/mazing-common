@@ -1,10 +1,9 @@
 {
   "name": "com.mazing.common",
-  "version": "0.0.3",
-  "displayName": "Common Library",
-  "description": "Common data types and classes",
+  "version": "0.0.6",
+  "displayName": "Mazing Common",
+  "description": "Mazing common library",
   "unity": "2021.3",
-  "unityRelease": "16f1",
     "dependencies": {
     "com.unity.inputsystem": "1.4.4",
     "com.unity.textmeshpro": "3.0.6",
