@@ -105,7 +105,7 @@ namespace mazing.common.Runtime.PreciseLocale
 
 #if UNITY_ANDROID && !UNITY_EDITOR
 	private class PreciseLocaleAndroid: PlatformBridge {
-		private static AndroidJavaClass _preciseLocale = new AndroidJavaClass("com.kokosoft.preciselocale.PreciseLocale");
+		private static UnityEngine.AndroidJavaClass _preciseLocale = new UnityEngine.AndroidJavaClass("com.kokosoft.preciselocale.PreciseLocale");
 
 		public string GetRegion() {
 			return _preciseLocale.CallStatic<string>("getRegion");                                 
