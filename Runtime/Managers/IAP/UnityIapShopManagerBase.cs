@@ -16,10 +16,11 @@ namespace mazing.common.Runtime.Managers.IAP
     
     public class ShopItemArgs : EventArgs
     {
-        public string                   Price      { get; set; }
-        public string                   Currency   { get; set; }
-        public bool                     HasReceipt { get; set; }
-        public Func<EShopProductResult> Result     { get; set; }
+        public decimal                  LocalizedPrice       { get; set; }
+        public string                   LocalizedPriceString { get; set; }
+        public string                   Currency             { get; set; }
+        public bool                     HasReceipt           { get; set; }
+        public Func<EShopProductResult> Result               { get; set; }
     }
     
     public abstract class UnityIapShopManagerBase : ShopManagerBase, IStoreListener
@@ -253,7 +254,8 @@ namespace mazing.common.Runtime.Managers.IAP
             }
             _Args.HasReceipt = product.hasReceipt;
             _Args.Currency = product.metadata.isoCurrencyCode;
-            _Args.Price = product.metadata.localizedPriceString;
+            _Args.LocalizedPrice = product.metadata.localizedPrice;
+            _Args.LocalizedPriceString = product.metadata.localizedPriceString;
             _Args.Result = () => EShopProductResult.Success;
         }
         
