@@ -16,7 +16,6 @@ namespace mazing.common.Runtime.Managers.Notifications
 {
     public class NotificationsManagerUnity 
         : NotificationsManagerBase,
-          INotificationsManager,
           IUpdateTick,
           IApplicationFocus,
           IDestroy
