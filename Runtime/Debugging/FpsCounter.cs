@@ -48,17 +48,21 @@ namespace mazing.common.Runtime.Debugging
         Entity<bool>        IsLowPerformance { get; }
         FpsCounterRecording GetRecording();
         void                Record(float _Duration);
+        void                OnActiveCameraChanged(Camera _Camera);
     }
 
     public class FpsCounterFake : InitBase, IFpsCounter
     {
-        public Entity<bool>        IsLowPerformance        => new Entity<bool>
+        public Entity<bool> IsLowPerformance => new Entity<bool>
         {
             Value = false,
             Result = EEntityResult.Success
         };
-        public FpsCounterRecording GetRecording()          => default;
+
+        public FpsCounterRecording GetRecording() => default;
+        
         public void                Record(float _Duration) { }
+        public void OnActiveCameraChanged(Camera _Camera) { }
     }
     
     public class FpsCounter : InitBase, IFpsCounter, IUpdateTick
@@ -101,7 +105,7 @@ namespace mazing.common.Runtime.Debugging
 
         public override void Init()
         {
-            if (RemotePropertiesCommon.DebugEnabled)
+            if (RemotePropertiesCommon.DebugEnabled || Application.isEditor)
                 InitFpsText();
             MeasurePerformanceOnInit();
             CommonTicker.Register(this);
@@ -131,6 +135,13 @@ namespace mazing.common.Runtime.Debugging
                 CommonTicker, 
                 _OnStart: () => m_DoRecord = true,
                 _OnDelay: () => m_DoRecord = false));
+        }
+
+        public void OnActiveCameraChanged(Camera _Camera)
+        {
+            var bounds = GraphicUtils.GetVisibleBounds(_Camera);
+            m_FpsText.gameObject.SetParent(_Camera.transform);
+            m_FpsText.transform.SetLocalPosXY(bounds.max.x - 1, bounds.max.y - 1);
         }
 
         public void UpdateTick()
@@ -172,8 +183,6 @@ namespace mazing.common.Runtime.Debugging
         {
             var textGo = new GameObject("Fps Counter Text");
             Object.DontDestroyOnLoad(textGo);
-            var screendBounds = GraphicUtils.GetVisibleBounds();
-            textGo.transform.SetPosXY(screendBounds.max.x - 1, screendBounds.max.y - 1);
             m_FpsText = textGo.AddComponent<TextMeshPro>();
             m_FpsText.rectTransform.pivot = Vector2.one;
             m_FpsText.alignment = TextAlignmentOptions.TopRight;
