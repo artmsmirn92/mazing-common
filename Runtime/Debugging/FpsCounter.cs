@@ -139,9 +139,19 @@ namespace mazing.common.Runtime.Debugging
 
         public void OnActiveCameraChanged(Camera _Camera)
         {
-            var bounds = GraphicUtils.GetVisibleBounds(_Camera);
-            m_FpsText.gameObject.SetParent(_Camera.transform);
-            m_FpsText.transform.SetLocalPosXY(bounds.max.x - 1, bounds.max.y - 1);
+            if (_Camera.IsNull())
+            {
+                Dbg.LogWarning("Camera is null");
+                return;
+            }
+            Cor.Run(Cor.WaitWhile(
+                () => m_FpsText.IsNull(), 
+                () =>
+            {
+                var bounds = GraphicUtils.GetVisibleBounds(_Camera);
+                m_FpsText.gameObject.SetParent(_Camera.transform);
+                m_FpsText.transform.SetLocalPosXY(bounds.max.x - 1, bounds.max.y - 1);
+            }));
         }
 
         public void UpdateTick()
