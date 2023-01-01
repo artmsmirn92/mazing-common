@@ -155,7 +155,7 @@ namespace mazing.common.Runtime.Debugging
             m_FpsCurrent = m_FramesCount / m_Dt ;
             m_FramesCount = 0;
             m_Dt -= 1f/UpdateRate;
-            if (RemotePropertiesCommon.DebugEnabled)
+            if (RemotePropertiesCommon.DebugEnabled || Application.isEditor)
                 m_FpsText.text = "FPS: " + Convert.ToInt32(m_FpsCurrent);
             if (m_DoRecord)
                 m_FpsValues.Add(m_FpsCurrent);
