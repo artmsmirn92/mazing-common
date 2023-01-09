@@ -6,8 +6,9 @@ namespace mazing.common.Runtime.UI
 {
     public interface IDialogViewer : IInit
     {
-        IDialogPanel      CurrentPanel   { get; }
-        RectTransform     Container      { get; }
+        int           Id           { get; }
+        IDialogPanel  CurrentPanel { get; }
+        RectTransform Container    { get; }
         
         Func<bool> OtherDialogViewersShowing { get; set; }
         void       Back(UnityAction  _OnFinish                      = null);

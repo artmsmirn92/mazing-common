@@ -21,15 +21,17 @@ namespace mazing.common.Runtime.UI.DialogViewers
     
     public class DialogViewerMediumFake : InitBase, IDialogViewerMedium
     {
-        public IDialogPanel  CurrentPanel                => null;
-        public RectTransform Container                   => null;
-        public Func<bool>    OtherDialogViewersShowing   { get; set; }
+        public int           Id                        => default;
+        public IDialogPanel  CurrentPanel              => null;
+        public RectTransform Container                 => null;
+        public Func<bool>    OtherDialogViewersShowing { get; set; }
+
+        public void Back(UnityAction _OnFinish = null) { }
         
-        public void Back(UnityAction  _OnFinish                       = null)                         { }
         public void Show(IDialogPanel _Panel, float _AnimationSpeed = 1, bool _HidePrevious = true) { }
     }
     
-    public abstract class DialogViewerMediumBase : DialogViewerBase, IDialogViewerMedium
+    public abstract class DialogViewerCommonBase : DialogViewerBase, IDialogViewerMedium
     {
         #region nonpublic members
         
@@ -42,7 +44,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
 
         #region inject
         
-        protected DialogViewerMediumBase(
+        protected DialogViewerCommonBase(
             IViewUICanvasGetter _CanvasGetter,
             IUITicker           _Ticker,
             ICameraProvider     _CameraProvider,

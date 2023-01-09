@@ -1,18 +1,19 @@
 ﻿using mazing.common.Runtime.CameraProviders;
+using mazing.common.Runtime.Enums;
 using mazing.common.Runtime.Managers;
 using mazing.common.Runtime.Ticker;
 
 namespace mazing.common.Runtime.UI.DialogViewers
 {
-    public interface IDialogViewerMedium3 : IDialogViewerMedium { }
+    public interface IDialogViewerFullscreen1 : IDialogViewerMedium { }
     
-    public class DialogViewerMedium3Fake : DialogViewerMediumFake, IDialogViewerMedium3 { }
+    public class DialogViewerFullscreen1Fake : DialogViewerMediumFake, IDialogViewerFullscreen1 { }
     
-    public class DialogViewerMedium3 : DialogViewerMediumBase, IDialogViewerMedium3
+    public class DialogViewerFullscreen1 : DialogViewerCommonBase, IDialogViewerFullscreen1
     {
-        protected override string PrefabName => "medium_3";
+        protected override string PrefabName => "fullscreen_1";
         
-        public DialogViewerMedium3(
+        public DialogViewerFullscreen1(
             IViewUICanvasGetter _CanvasGetter,
             IUITicker           _Ticker,
             ICameraProvider     _CameraProvider,
@@ -22,5 +23,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
                 _Ticker, 
                 _CameraProvider, 
                 _PrefabSetManager) { }
+
+        public override int Id => DialogViewerTypesCommon.Fullscreen1;
     }
 }

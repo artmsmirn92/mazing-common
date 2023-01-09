@@ -1,4 +1,5 @@
 ﻿using mazing.common.Runtime.CameraProviders;
+using mazing.common.Runtime.Enums;
 using mazing.common.Runtime.Managers;
 using mazing.common.Runtime.Ticker;
 
@@ -8,7 +9,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
     
     public class DialogViewerMedium2Fake : DialogViewerMediumFake, IDialogViewerMedium2 { }
     
-    public class DialogViewerMedium2 : DialogViewerMediumBase, IDialogViewerMedium2
+    public class DialogViewerMedium2 : DialogViewerCommonBase, IDialogViewerMedium2
     {
         protected override string PrefabName => "medium_2";
         
@@ -22,5 +23,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
                 _Ticker, 
                 _CameraProvider, 
                 _PrefabSetManager) { }
+
+        public override int Id => DialogViewerTypesCommon.Medium2;
     }
 }

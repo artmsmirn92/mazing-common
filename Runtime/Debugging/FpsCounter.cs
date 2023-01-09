@@ -139,11 +139,6 @@ namespace mazing.common.Runtime.Debugging
 
         public void OnActiveCameraChanged(Camera _Camera)
         {
-            if (_Camera.IsNull())
-            {
-                Dbg.LogWarning("Camera is null");
-                return;
-            }
             Cor.Run(Cor.WaitWhile(
                 () => m_FpsText.IsNull(), 
                 () =>

@@ -99,5 +99,10 @@ namespace mazing.common.Runtime.Utils
             _Ended    = touch.phase == TouchPhase.Ended;
 #endif
         }
+
+        public static int GetHash(string _String)
+        {
+            return Animator.StringToHash(_String);
+        }
     }
 }

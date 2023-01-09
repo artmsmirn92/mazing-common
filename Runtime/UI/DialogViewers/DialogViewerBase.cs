@@ -59,7 +59,9 @@ namespace mazing.common.Runtime.UI.DialogViewers
 
         #region api
 
-        public IDialogPanel CurrentPanel  => PanelsStack.Any() ? PanelsStack.Peek() : null;
+        public abstract int Id { get; }
+        
+        public IDialogPanel CurrentPanel => PanelsStack.Any() ? PanelsStack.Peek() : null;
 
         public abstract RectTransform Container                 { get; }
         public          Func<bool>    OtherDialogViewersShowing { get; set; }
