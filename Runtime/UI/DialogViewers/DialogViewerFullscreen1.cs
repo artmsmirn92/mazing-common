@@ -24,6 +24,6 @@ namespace mazing.common.Runtime.UI.DialogViewers
                 _CameraProvider, 
                 _PrefabSetManager) { }
 
-        public override int Id => DialogViewerTypesCommon.Fullscreen1;
+        public override int Id => DialogViewerIdsCommon.Fullscreen1;
     }
 }

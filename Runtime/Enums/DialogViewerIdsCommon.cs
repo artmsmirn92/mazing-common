@@ -2,7 +2,7 @@
 
 namespace mazing.common.Runtime.Enums
 {
-    public static class DialogViewerTypesCommon
+    public static class DialogViewerIdsCommon
     {
         public static int Fullscreen1 => CommonUtils.GetHash(nameof(Fullscreen1));
         public static int Medium1     => CommonUtils.GetHash(nameof(Medium1));
