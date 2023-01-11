@@ -7,6 +7,7 @@ namespace mazing.common.Runtime.UI
     public interface IDialogViewer : IInit
     {
         int           Id           { get; }
+        string        CanvasName   { get; }
         IDialogPanel  CurrentPanel { get; }
         RectTransform Container    { get; }
         

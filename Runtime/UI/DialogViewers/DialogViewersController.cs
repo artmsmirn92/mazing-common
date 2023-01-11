@@ -29,21 +29,18 @@ namespace mazing.common.Runtime.UI.DialogViewers
         
         #region inject
 
-        private IViewUICanvasGetter      CanvasGetter            { get; }
-        private IDialogViewerMedium1     DialogViewerMedium1     { get; }
-        private IDialogViewerMedium2     DialogViewerMedium2     { get; }
-        private IDialogViewerFullscreen1 DialogViewerFullscreen1 { get; }
+        private IViewUICanvasGetter           CanvasGetter                 { get; }
+        private IDialogViewerMediumCommon     DialogViewerMediumCommon     { get; }
+        private IDialogViewerFullscreenCommon DialogViewerFullscreenCommon { get; }
 
         public DialogViewersController(
-            IViewUICanvasGetter      _CanvasGetter,
-            IDialogViewerMedium1     _DialogViewerMedium1,
-            IDialogViewerMedium2     _DialogViewerMedium2,
-            IDialogViewerFullscreen1 _DialogViewerFullscreen1)
+            IViewUICanvasGetter           _CanvasGetter,
+            IDialogViewerMediumCommon     _DialogViewerMediumCommon,
+            IDialogViewerFullscreenCommon _DialogViewerFullscreenCommon)
         {
-            CanvasGetter            = _CanvasGetter;
-            DialogViewerMedium1     = _DialogViewerMedium1;
-            DialogViewerMedium2     = _DialogViewerMedium2;
-            DialogViewerFullscreen1 = _DialogViewerFullscreen1;
+            CanvasGetter                 = _CanvasGetter;
+            DialogViewerMediumCommon     = _DialogViewerMediumCommon;
+            DialogViewerFullscreenCommon = _DialogViewerFullscreenCommon;
         }
 
         #endregion
@@ -53,9 +50,8 @@ namespace mazing.common.Runtime.UI.DialogViewers
         public override void Init()
         {
             CanvasGetter.Init();
-            RegisterDialogViewer(DialogViewerMedium1);
-            RegisterDialogViewer(DialogViewerMedium2);
-            RegisterDialogViewer(DialogViewerFullscreen1);
+            RegisterDialogViewer(DialogViewerMediumCommon);
+            RegisterDialogViewer(DialogViewerFullscreenCommon);
             SetOtherDialogViewersShowingActions();
             base.Init();
         }
@@ -77,32 +73,21 @@ namespace mazing.common.Runtime.UI.DialogViewers
 
         private void SetOtherDialogViewersShowingActions()
         {
-            DialogViewerMedium1.OtherDialogViewersShowing = () =>
+            DialogViewerMediumCommon.OtherDialogViewersShowing = () =>
             {
                 var panels = new[]
                 {
-                    DialogViewerMedium2   .CurrentPanel,
-                    DialogViewerFullscreen1   .CurrentPanel
+                    DialogViewerFullscreenCommon.CurrentPanel
                 };
                 return panels.Any(_P => _P != null &&
                                         _P.AppearingState != EAppearingState.Dissapeared);
             };
-            DialogViewerMedium2.OtherDialogViewersShowing = () =>
+
+            DialogViewerFullscreenCommon.OtherDialogViewersShowing = () =>
             {
                 var panels = new[]
                 {
-                    DialogViewerMedium1   .CurrentPanel,
-                    DialogViewerFullscreen1   .CurrentPanel
-                };
-                return panels.Any(_P => _P != null &&
-                                        _P.AppearingState != EAppearingState.Dissapeared);
-            };
-            DialogViewerFullscreen1.OtherDialogViewersShowing = () =>
-            {
-                var panels = new[]
-                {
-                    DialogViewerMedium1   .CurrentPanel,
-                    DialogViewerMedium2   .CurrentPanel,
+                    DialogViewerMediumCommon.CurrentPanel,
                 };
                 return panels.Any(_P => _P != null &&
                                         _P.AppearingState != EAppearingState.Dissapeared);

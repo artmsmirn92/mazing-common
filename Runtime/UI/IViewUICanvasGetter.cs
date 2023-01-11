@@ -4,6 +4,6 @@ namespace mazing.common.Runtime.UI
 {
     public interface IViewUICanvasGetter : IInit
     {
-        Canvas GetCanvas();
+        Canvas GetCanvas(string _Name);
     }
 }

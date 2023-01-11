@@ -5,15 +5,15 @@ using mazing.common.Runtime.Ticker;
 
 namespace mazing.common.Runtime.UI.DialogViewers
 {
-    public interface IDialogViewerMedium1 : IDialogViewerMedium { }
+    public interface IDialogViewerFullscreenCommon : IDialogViewerMedium { }
     
-    public class DialogViewerMedium1Fake : DialogViewerMediumFake, IDialogViewerMedium1 { }
+    public class DialogViewerFullscreenCommonFake : DialogViewerMediumFake, IDialogViewerFullscreenCommon { }
     
-    public class DialogViewerMedium1 : DialogViewerCommonBase, IDialogViewerMedium1
+    public class DialogViewerFullscreenCommon : DialogViewerCommonBase, IDialogViewerFullscreenCommon
     {
-        protected override string PrefabName => "medium_1";
+        protected override string PrefabName => "fullscreen_common";
         
-        public DialogViewerMedium1(
+        public DialogViewerFullscreenCommon(
             IViewUICanvasGetter _CanvasGetter,
             IUITicker           _Ticker,
             ICameraProvider     _CameraProvider,
@@ -24,6 +24,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
                 _CameraProvider, 
                 _PrefabSetManager) { }
 
-        public override int Id => DialogViewerIdsCommon.Medium1;
+        public override int    Id         => DialogViewerIdsCommon.FullscreenCommon;
+        public override string CanvasName => CommonCanvasNames.CommonCameraSpace;
     }
 }

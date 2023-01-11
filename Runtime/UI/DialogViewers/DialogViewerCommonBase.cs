@@ -14,7 +14,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-// ReSharper disable ClassNeverInstantiated.Global
 namespace mazing.common.Runtime.UI.DialogViewers
 {
     public interface IDialogViewerMedium : IDialogViewer { }
@@ -22,6 +21,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
     public class DialogViewerMediumFake : InitBase, IDialogViewerMedium
     {
         public int           Id                        => default;
+        public string        CanvasName                => null;
         public IDialogPanel  CurrentPanel              => null;
         public RectTransform Container                 => null;
         public Func<bool>    OtherDialogViewersShowing { get; set; }
@@ -63,7 +63,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
         
         public override void Init()
         {
-            var parent = CanvasGetter.GetCanvas().RTransform();
+            var parent = CanvasGetter.GetCanvas(CanvasName).RTransform();
             var go = PrefabSetManager.InitUiPrefab(
                 UIUtils.UiRectTransform(
                     parent,
@@ -87,7 +87,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
                 .GetComponentsInChildrenEx<Graphic>()
                 .Distinct()
                 .ToDictionary(_El => _El, _El => _El.color.a);
-            var canvas = CanvasGetter.GetCanvas();
+            var canvas = CanvasGetter.GetCanvas(CanvasName);
             canvas.enabled = true;
             Cor.Run(DoTransparentTransition(
                 _Panel, 
@@ -122,7 +122,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
                         CameraProvider.EnableEffect(ECameraEffect.DepthOfField, false);
                     panel.PanelRectTransform.gameObject.SetActive(false);
                     _OnFinish?.Invoke();
-                    var canvas = CanvasGetter.GetCanvas();
+                    var canvas = CanvasGetter.GetCanvas(CanvasName);
                     if (CurrentPanel == null 
                         && canvas.enabled 
                         && !OtherDialogViewersShowing())
