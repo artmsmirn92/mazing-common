@@ -5,7 +5,7 @@ using mazing.common.Runtime.Ticker;
 
 namespace mazing.common.Runtime.UI.DialogViewers
 {
-    public interface IDialogViewerFullscreenCommon : IDialogViewerMedium { }
+    public interface IDialogViewerFullscreenCommon : IDialogViewer { }
     
     public class DialogViewerFullscreenCommonFake : DialogViewerMediumFake, IDialogViewerFullscreenCommon { }
     
@@ -25,6 +25,6 @@ namespace mazing.common.Runtime.UI.DialogViewers
                 _PrefabSetManager) { }
 
         public override int    Id         => DialogViewerIdsCommon.FullscreenCommon;
-        public override string CanvasName => CommonCanvasNames.CommonCameraSpace;
+        public override string CanvasName => CommonCanvasNames.CommonScreenSpace;
     }
 }
