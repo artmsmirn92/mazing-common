@@ -70,7 +70,6 @@ namespace mazing.common.Runtime.UI.DialogViewers
                     RectTransformLite.FullFill),
                 "dialog_viewers",
                 PrefabName);
-            go.transform.position = Vector3.zero;
             Cor.Run(Cor.WaitNextFrame(() =>
             {
                 m_DialogContainer = go.GetCompItem<RectTransform>("dialog_container");
