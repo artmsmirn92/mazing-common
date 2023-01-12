@@ -167,7 +167,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
                 key.color = key.color.SetA(value * _AlphaCoefficient);
         }
 
-        private IEnumerator DoTranslucentBackgroundTransition(bool _Disappear, float _Time)
+        protected virtual IEnumerator DoTranslucentBackgroundTransition(bool _Disappear, float _Time)
         {
             CameraProvider.EnableEffect(ECameraEffect.DepthOfField, !_Disappear);
             CameraProvider.EnableEffect(ECameraEffect.Glitch, !_Disappear);
