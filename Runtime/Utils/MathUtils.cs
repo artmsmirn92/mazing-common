@@ -10,6 +10,11 @@ namespace mazing.common.Runtime.Utils
     {
         public const           float         Epsilon   = 1e-5f;
         public static readonly Random RandomGen = new Random();
+
+        public static bool Equals(float _V1, float _V2)
+        {
+            return Mathf.Abs(_V1 - _V2) < Epsilon;
+        }
         
         public static int Lerp(int _A, int _B, float _T)
         {
