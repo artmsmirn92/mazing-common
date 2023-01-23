@@ -70,28 +70,22 @@ namespace mazing.common.Runtime.UI.DialogViewers
         #endregion
 
         #region nonpublic methods
-
+        
         private void SetOtherDialogViewersShowingActions()
         {
-            DialogViewerMediumCommon.OtherDialogViewersShowing = () =>
+            var viewers = m_ViewersDict.Values.ToList();
+            foreach (var dialogViewer in viewers)
             {
-                var panels = new[]
+                dialogViewer.OtherDialogViewersShowing = () =>
                 {
-                    DialogViewerFullscreenCommon.CurrentPanel
+                    var panels = viewers
+                        .Except(new[] {dialogViewer})
+                        .Where(_V => _V.CanvasName == dialogViewer.CanvasName)
+                        .Select(_V => _V.CurrentPanel);
+                    return panels.Any(_P => _P != null &&
+                                            _P.AppearingState != EAppearingState.Dissapeared);
                 };
-                return panels.Any(_P => _P != null &&
-                                        _P.AppearingState != EAppearingState.Dissapeared);
-            };
-
-            DialogViewerFullscreenCommon.OtherDialogViewersShowing = () =>
-            {
-                var panels = new[]
-                {
-                    DialogViewerMediumCommon.CurrentPanel,
-                };
-                return panels.Any(_P => _P != null &&
-                                        _P.AppearingState != EAppearingState.Dissapeared);
-            };
+            }
         }
 
         #endregion
