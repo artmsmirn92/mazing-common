@@ -29,18 +29,11 @@ namespace mazing.common.Runtime.UI.DialogViewers
         
         #region inject
 
-        private IViewUICanvasGetter           CanvasGetter                 { get; }
-        private IDialogViewerMediumCommon     DialogViewerMediumCommon     { get; }
-        private IDialogViewerFullscreenCommon DialogViewerFullscreenCommon { get; }
+        private IViewUICanvasGetter CanvasGetter { get; }
 
-        public DialogViewersController(
-            IViewUICanvasGetter           _CanvasGetter,
-            IDialogViewerMediumCommon     _DialogViewerMediumCommon,
-            IDialogViewerFullscreenCommon _DialogViewerFullscreenCommon)
+        public DialogViewersController(IViewUICanvasGetter _CanvasGetter)
         {
-            CanvasGetter                 = _CanvasGetter;
-            DialogViewerMediumCommon     = _DialogViewerMediumCommon;
-            DialogViewerFullscreenCommon = _DialogViewerFullscreenCommon;
+            CanvasGetter = _CanvasGetter;
         }
 
         #endregion
@@ -50,8 +43,6 @@ namespace mazing.common.Runtime.UI.DialogViewers
         public override void Init()
         {
             CanvasGetter.Init();
-            RegisterDialogViewer(DialogViewerMediumCommon);
-            RegisterDialogViewer(DialogViewerFullscreenCommon);
             SetOtherDialogViewersShowingActions();
             base.Init();
         }
