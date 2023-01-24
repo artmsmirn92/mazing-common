@@ -110,8 +110,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
             }
             //do transition for graphic elements
             float currTime = Ticker.Time;
-            // yield return DoTranslucentBackgroundTransition(_Disappear, _Time);
-            Cor.Run(DoTranslucentBackgroundTransition(_Disappear, _Time));
+            Cor.Run(DoAdditionalCameraEffectsTransition(_Disappear, _Time));
             if (!_Disappear)
             {
                 if (!m_PanelsTransitionInfoDict.ContainsKey(_DialogPanel))
@@ -167,7 +166,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
                 key.color = key.color.SetA(value * _AlphaCoefficient);
         }
 
-        protected virtual IEnumerator DoTranslucentBackgroundTransition(bool _Disappear, float _Time)
+        protected virtual IEnumerator DoAdditionalCameraEffectsTransition(bool _Disappear, float _Time)
         {
             CameraProvider.EnableEffect(ECameraEffect.DepthOfField, !_Disappear);
             CameraProvider.EnableEffect(ECameraEffect.Glitch, !_Disappear);
