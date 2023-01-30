@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace mazing.common.Runtime.Entities
 {
-    public class LocalizableTextObjectInfo : ICloneable
+    public class LocTextInfo : ICloneable
     {
         public Component            TextObject      { get; }
         public string               LocalizationKey { get; set; }
@@ -12,7 +12,7 @@ namespace mazing.common.Runtime.Entities
         public Func<string, string> TextFormula     { get; set; }
         public bool                 AutoFont        { get; }
 
-        public LocalizableTextObjectInfo(
+        public LocTextInfo(
             Component            _TextObject,
             ETextType            _TextType,
             string               _LocalizationKey = null,
@@ -28,7 +28,7 @@ namespace mazing.common.Runtime.Entities
 
         public object Clone()
         {
-            return new LocalizableTextObjectInfo(TextObject, TextType, LocalizationKey, TextFormula);
+            return new LocTextInfo(TextObject, TextType, LocalizationKey, TextFormula);
         }
     }
 }

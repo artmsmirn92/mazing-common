@@ -51,7 +51,7 @@ namespace mazing.common.Runtime.UI
             Ticker.Register(this);
             CheckIfSerializedItemsNotNull();
             foreach (var text in texts.Where(_Text => _Text.IsNotNull()))
-                LocalizationManager.AddTextObject(new LocalizableTextObjectInfo(text, ETextType.MenuUI));
+                LocalizationManager.AddTextObject(new LocTextInfo(text, ETextType.MenuUI));
             base.Init();
         }
         

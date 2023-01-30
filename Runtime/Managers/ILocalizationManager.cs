@@ -11,8 +11,8 @@ namespace mazing.common.Runtime.Managers
         string                       GetTranslation(string _Key);
         void                         SetLanguage(ELanguage _Language);
         ELanguage                    GetCurrentLanguage();
-        void                         AddTextObject(LocalizableTextObjectInfo    _Info);
-        void                         RemoveTextObject(LocalizableTextObjectInfo _Info);
+        void                         AddTextObject(LocTextInfo    _Info);
+        void                         RemoveTextObject(LocTextInfo _Info);
 
         TMP_FontAsset GetFont(ETextType _TextType, ELanguage? _Language = null);
     }
