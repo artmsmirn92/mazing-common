@@ -24,7 +24,7 @@ namespace mazing.common.Runtime.UI
         
         #region nonpublic members
 
-        private   IAudioManager        AudioManager        { get; set; }
+        protected IAudioManager        AudioManager        { get; set; }
         protected IUITicker            Ticker              { get; set; }
         protected ILocalizationManager LocalizationManager { get; private set; }
 
