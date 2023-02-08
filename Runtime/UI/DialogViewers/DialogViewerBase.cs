@@ -40,7 +40,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
 
         protected IViewUICanvasGetter CanvasGetter     { get; }
         protected ICameraProvider     CameraProvider   { get; }
-        private   IUITicker           Ticker           { get; }
+        protected IUITicker           Ticker           { get; }
         protected IPrefabSetManager   PrefabSetManager { get; }
 
         protected DialogViewerBase(
