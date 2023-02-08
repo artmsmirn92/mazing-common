@@ -27,8 +27,12 @@ namespace mazing.common.Runtime.UI.DialogViewers
         public Func<bool>    OtherDialogViewersShowing { get; set; }
 
         public void Back(UnityAction _OnFinish = null) { }
-        
-        public void Show(IDialogPanel _Panel, float _AnimationSpeed = 1, bool _HidePrevious = true) { }
+
+        public void Show(
+            IDialogPanel             _Panel,
+            float                    _AnimationSpeed                = 1,
+            bool                     _HidePrevious                  = true,
+            UnityAction<bool, float> _AdditionalCameraEffectsAction = null) { }
     }
     
     public abstract class DialogViewerCommonBase : DialogViewerBase, IDialogViewerMedium
@@ -77,7 +81,11 @@ namespace mazing.common.Runtime.UI.DialogViewers
             }));
         }
 
-        public override void Show(IDialogPanel _Panel, float _Speed = 1f, bool _HidePrevious = true)
+        public override void Show(
+            IDialogPanel             _Panel,
+            float                    _Speed                         = 1f,
+            bool                     _HidePrevious                  = true,
+            UnityAction<bool, float> _AdditionalCameraEffectsAction = null)
         {
             if (_Panel == null)
                 return;
@@ -93,12 +101,13 @@ namespace mazing.common.Runtime.UI.DialogViewers
                 _Panel, 
                 m_Alphas,
                 0.2f,
-                false,
+                true,
                 () =>
                 {
                     _Panel.AppearingState = EAppearingState.Appeared;
                 },
-                false));
+                false,
+                _AdditionalCameraEffectsAction));
             _Panel.AppearingState = EAppearingState.Appearing;
             if (_Panel.Animator.IsNull())
                 return;
@@ -114,7 +123,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
                 panel,
                 m_Alphas,
                 0.2f,
-                true,
+                false,
                 () =>
                 {
                     panel.AppearingState = EAppearingState.Dissapeared;
@@ -130,7 +139,8 @@ namespace mazing.common.Runtime.UI.DialogViewers
                         canvas.enabled = false;
                     }
                 },
-                false));
+                false,
+                null));
             panel.AppearingState = EAppearingState.Dissapearing;
         }
 

@@ -33,6 +33,8 @@ namespace mazing.common.Runtime.UI.DialogViewers
 
         private readonly Dictionary<IDialogPanel, DialogPanelTransitionInfo> m_PanelsTransitionInfoDict
             = new Dictionary<IDialogPanel, DialogPanelTransitionInfo>();
+
+        private UnityAction<bool, float> m_AdditionalCameraEffectsAction;
         
         #endregion
 
@@ -70,9 +72,10 @@ namespace mazing.common.Runtime.UI.DialogViewers
         public abstract void Back(UnityAction _OnFinish = null);
 
         public virtual void Show(
-            IDialogPanel _Panel,
-            float        _AnimationSpeed = 1,
-            bool         _HidePrevious   = true)
+            IDialogPanel             _Panel,
+            float                    _AnimationSpeed                = 1,
+            bool                     _HidePrevious                  = true,
+            UnityAction<bool, float> _AdditionalCameraEffectsAction = null)
         {
             PanelsStack.Push(_Panel);
         }
@@ -91,10 +94,13 @@ namespace mazing.common.Runtime.UI.DialogViewers
             IDialogPanel               _DialogPanel,
             Dictionary<Graphic, float> _GraphicsAndAlphas,
             float                      _Time,
-            bool                       _Disappear,
+            bool                       _Appear,
             UnityAction                _OnFinish,
-            bool                       _UseInteractableInsteadEnabledOnSelectables)
+            bool                       _UseInteractableInsteadEnabledOnSelectables,
+            UnityAction<bool, float>   _AdditionalCameraEffectsAction)
         {
+            if (_Appear)
+                m_AdditionalCameraEffectsAction = _AdditionalCameraEffectsAction;
             var rectTr = _DialogPanel.PanelRectTransform;
             rectTr.gameObject.SetActive(true);
             var selectables = rectTr.GetComponentsInChildrenEx<Selectable>();
@@ -110,8 +116,13 @@ namespace mazing.common.Runtime.UI.DialogViewers
             }
             //do transition for graphic elements
             float currTime = Ticker.Time;
-            Cor.Run(DoAdditionalCameraEffectsTransition(_Disappear, _Time));
-            if (!_Disappear)
+            var addCamEffectsAction = m_AdditionalCameraEffectsAction ?? AdditionalCameraEffectsActionDefault;
+            addCamEffectsAction(_Appear, _Time);
+            if (_AdditionalCameraEffectsAction != null)
+                _AdditionalCameraEffectsAction(_Appear, _Time);
+            else
+                AdditionalCameraEffectsActionDefault(_Appear, _Time);
+            if (_Appear)
             {
                 if (!m_PanelsTransitionInfoDict.ContainsKey(_DialogPanel))
                 {
@@ -142,9 +153,9 @@ namespace mazing.common.Runtime.UI.DialogViewers
             foreach ((var graphic, float value) in m_PanelsTransitionInfoDict[_DialogPanel].StartAlphaChannelsDict)
             {
                 if (!graphic.IsNull())
-                    graphic.color = graphic.color.SetA(_Disappear ? 0 : value);
+                    graphic.color = graphic.color.SetA(!_Appear ? 0 : value);
             }
-            if (_Disappear)
+            if (!_Appear)
             {
                 var collection = m_PanelsTransitionInfoDict[_DialogPanel].StartAlphaChannelsDict;
                 SetGraphicAlphaChannels(collection, 1f);
@@ -166,11 +177,16 @@ namespace mazing.common.Runtime.UI.DialogViewers
                 key.color = key.color.SetA(value * _AlphaCoefficient);
         }
 
-        protected virtual IEnumerator DoAdditionalCameraEffectsTransition(bool _Disappear, float _Time)
+        private void AdditionalCameraEffectsActionDefault(bool _Disappear, float _Time)
         {
-            CameraProvider.EnableEffect(ECameraEffect.DepthOfField, !_Disappear);
-            CameraProvider.EnableEffect(ECameraEffect.Glitch, !_Disappear);
-            if (_Disappear)
+            Cor.Run(AdditionalCameraEffectsActionDefaultCoroutine(_Disappear, _Time));
+        }
+
+        protected virtual IEnumerator AdditionalCameraEffectsActionDefaultCoroutine(bool _Appear, float _Time)
+        {
+            CameraProvider.EnableEffect(ECameraEffect.DepthOfField, _Appear);
+            CameraProvider.EnableEffect(ECameraEffect.Glitch, _Appear);
+            if (!_Appear)
                 yield break;
             float currTime = Ticker.Time;
             while (Ticker.Time < currTime + _Time)
