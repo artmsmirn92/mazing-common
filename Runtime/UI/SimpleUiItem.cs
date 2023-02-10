@@ -13,12 +13,12 @@ using UnityEngine.UI;
 
 namespace mazing.common.Runtime.UI
 {
-    public abstract class SimpleUiItemBase : MonoBehInitBase
+    public class SimpleUiItem : MonoBehInitBase
     {
         #region serialized fields
 
-        [SerializeField] protected Image               background;
-        [SerializeField] private List<TextMeshProUGUI> texts;
+        [SerializeField] protected Image                 background;
+        [SerializeField] private   List<TextMeshProUGUI> texts;
 
         #endregion
         

@@ -4,7 +4,7 @@
 
 namespace mazing.common.Runtime.UI
 {
-    public class SimpleUiButtonView : SimpleUiItemBase
+    public class SimpleUiButtonView : SimpleUiItem
     {
         // [SerializeField] private Button button;
 

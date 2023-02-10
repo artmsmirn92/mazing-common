@@ -1,4 +1,4 @@
 ﻿namespace mazing.common.Runtime.UI
 {
-    public class SimpleUiDialogPanelView : SimpleUiItemBase { }
+    public class SimpleUiDialogPanelView : SimpleUiItem { }
 }

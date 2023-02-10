@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace mazing.common.Runtime.UI
 {
-    public class SimpleUiToggleView : SimpleUiItemBase
+    public class SimpleUiToggleView : SimpleUiItem
     {
         [SerializeField] private Toggle toggle;
 
