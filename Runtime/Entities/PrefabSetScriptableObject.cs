@@ -19,7 +19,7 @@ namespace mazing.common.Runtime.Entities
         [Serializable]
         public class PrefabsList : Helpers.ReorderableArray<Prefab> { }
 
-        [Header("Prefabs"), Reorderable(paginate = true, pageSize = 50)]
+        [Header("Prefabs"), Reorderable(paginate = true, pageSize = 100)]
         public PrefabsList prefabs;
     }
 }
