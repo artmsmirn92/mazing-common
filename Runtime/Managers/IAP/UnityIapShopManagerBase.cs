@@ -21,6 +21,22 @@ namespace mazing.common.Runtime.Managers.IAP
         public string                   Currency             { get; set; }
         public bool                     HasReceipt           { get; set; }
         public Func<EShopProductResult> Result               { get; set; }
+
+        public ShopItemArgs() { }
+        
+        public ShopItemArgs(
+            decimal                  _LocalizedPrice,
+            string                   _LocalizedPriceString,
+            string                   _Currency,
+            bool                     _HasReceipt,
+            Func<EShopProductResult> _Result)
+        {
+            LocalizedPrice       = _LocalizedPrice;
+            LocalizedPriceString = _LocalizedPriceString;
+            Currency             = _Currency;
+            HasReceipt           = _HasReceipt;
+            Result               = _Result;
+        }
     }
     
     public abstract class UnityIapShopManagerBase : ShopManagerBase, IStoreListener
