@@ -100,7 +100,7 @@ namespace mazing.common.Runtime.UI.DialogViewers
             Cor.Run(DoTransparentTransition(
                 _Panel, 
                 m_Alphas,
-                0.2f * _Speed,
+                0.2f / _Speed,
                 true,
                 () =>
                 {
