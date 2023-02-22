@@ -70,7 +70,7 @@ namespace mazing.common.Runtime.UI
         }
 
         
-        protected void SoundOnClick()
+        protected void PlayButtonClickSound()
         {
             AudioManager.PlayClip(CommonAudioClipArgs.UiButtonClick);
         }
