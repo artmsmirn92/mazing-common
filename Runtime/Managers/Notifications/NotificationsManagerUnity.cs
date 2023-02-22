@@ -137,7 +137,7 @@ namespace mazing.common.Runtime.Managers.Notifications
         private IGameNotification CreateNotification()
         {
             if (!Initialized)
-                throw new InvalidOperationException("Must call Initialize() first.");
+                throw new InvalidOperationException("Must call NotificationsManager.Init() first.");
             return Platform?.CreateNotification();
         }
 

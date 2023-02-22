@@ -16,8 +16,8 @@ namespace mazing.common.Runtime.Helpers
 
         protected void RaiseInitialization()
         {
-            Initialize?.Invoke();
             Initialized = true;
+            Initialize?.Invoke();
         }
     }
 }
