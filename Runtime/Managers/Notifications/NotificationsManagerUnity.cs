@@ -89,7 +89,6 @@ namespace mazing.common.Runtime.Managers.Notifications
                 true,
                 true);
             InitNotifications(channel);
-            // PushNotificationsProvider.Init();
             base.Init();
             OnForegrounding();
         }
