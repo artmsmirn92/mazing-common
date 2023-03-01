@@ -57,14 +57,14 @@ public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
 
         public void CopyTo(T[] _Array, int _ArrayIndex)
         {
-            Collection.ToList().CopyTo(_Array, _ArrayIndex);
+            Collection.CopyTo(_Array, _ArrayIndex);
         }
 
         public abstract bool Remove(T _Item);
 
         public int IndexOf(T _Item)
         {
-            return Collection.ToList().IndexOf(_Item);
+            return Collection.IndexOf(_Item);
         }
 
         public void Insert(int _Index, T _Item)
