@@ -1,9 +1,8 @@
 #if UNITY_IOS
 using System;
-using mazing.common.Runtime.Managers.Notifications;
 using Unity.Notifications.iOS;
 
-namespace Common.Managers.Notifications.iOS
+namespace mazing.common.Runtime.Managers.Notifications.iOS
 {
     /// <summary>
     /// iOS implementation of <see cref="IGameNotificationsPlatform"/>.

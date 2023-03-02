@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Common.Managers.Notifications.iOS;
+using mazing.common.Runtime.Managers.Notifications.iOS;
 using mazing.common.Runtime.Settings;
 using mazing.common.Runtime.Ticker;
 using UnityEngine;
