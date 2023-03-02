@@ -1,6 +1,6 @@
 ﻿#if UNITY_IOS
-using Common.Helpers;
-using Common.Utils;
+using mazing.common.Runtime.Managers;
+using mazing.common.Runtime.Managers.IAP;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
@@ -11,13 +11,9 @@ namespace Common.Managers.IAP
     public class AppleUnityIAPShopManager : UnityIapShopManagerBase
     {
         private IAppleExtensions   m_AppleExtensions;
-        private GlobalGameSettings Settings { get; }
         
-        public AppleUnityIAPShopManager(ILocalizationManager _LocalizationManager, GlobalGameSettings _Settings)
-            : base(_LocalizationManager)
-        {
-            Settings = _Settings;
-        }
+        public AppleUnityIAPShopManager(ILocalizationManager _LocalizationManager)
+            : base(_LocalizationManager) { }
 
         public override void OnInitialized(IStoreController _Controller, IExtensionProvider _Extensions)
         {

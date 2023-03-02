@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using mazing.common.Runtime.Managers.Notifications.Android;
+using Common.Managers.Notifications.iOS;
 using mazing.common.Runtime.Settings;
 using mazing.common.Runtime.Ticker;
-using Unity.Notifications.Android;
 using UnityEngine;
 #if UNITY_ANDROID
+using Unity.Notifications.Android;
+using mazing.common.Runtime.Managers.Notifications.Android;
 #elif UNITY_IOS
-using Common.Managers.Notifications.iOS;
 #endif
 
 namespace mazing.common.Runtime.Managers.Notifications

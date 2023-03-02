@@ -1,5 +1,6 @@
 #if UNITY_IOS
 using System;
+using mazing.common.Runtime.Managers.Notifications;
 using Unity.Notifications.iOS;
 
 namespace Common.Managers.Notifications.iOS
