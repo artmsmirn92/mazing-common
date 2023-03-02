@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using mazing.common.Runtime.Managers.Notifications.iOS;
 using mazing.common.Runtime.Settings;
 using mazing.common.Runtime.Ticker;
 using UnityEngine;
@@ -10,6 +9,7 @@ using UnityEngine;
 using Unity.Notifications.Android;
 using mazing.common.Runtime.Managers.Notifications.Android;
 #elif UNITY_IOS
+using mazing.common.Runtime.Managers.Notifications.iOS;
 #endif
 
 namespace mazing.common.Runtime.Managers.Notifications
