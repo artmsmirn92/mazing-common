@@ -19,13 +19,13 @@ namespace mazing.common.Runtime.SpawnPools
                 Object.Destroy(item);
             base.Clear();
         }
-
-
+        
         public override bool Remove(T _Item)
         {
             if (!Contains( _Item))
                 return false;
             Object.Destroy(_Item);
+            ItemsCount--;
             return Collection.Remove(Collection[IndexOf(_Item)]);
         }
     
@@ -34,8 +34,7 @@ namespace mazing.common.Runtime.SpawnPools
             Object.Destroy(Collection[_Index]);
             base.RemoveAt(_Index);
         }
-
-
+        
         #endregion
     
         #region nonpublic methods

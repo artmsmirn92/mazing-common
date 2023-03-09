@@ -6,11 +6,12 @@ using mazing.common.Runtime.Utils;
 
 namespace mazing.common.Runtime.SpawnPools
 {
-public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
+    public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
     {
         #region nonpublic members
 
         protected readonly List<T> Collection = new List<T>();
+        protected          int     ItemsCount;
 
         #endregion
 
@@ -18,7 +19,7 @@ public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
 
         #region inherited interface
 
-        public int Count => Collection.Count;
+        public int Count => ItemsCount;
 
         public bool IsReadOnly => false;
 
@@ -37,6 +38,7 @@ public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
             if (_Item == null)
                 return;
             Collection.Add(_Item);
+            ItemsCount++;
         }
 
         public void AddRange(IEnumerable<T> _Items)
@@ -48,6 +50,7 @@ public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
         public virtual void Clear()
         {
             Collection.Clear();
+            ItemsCount = 0;
         }
 
         public bool Contains(T _Item)
@@ -78,6 +81,7 @@ public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
         public virtual void RemoveAt(int _Index)
         {
             Collection.RemoveAt(_Index);
+            ItemsCount--;
         }
 
         public T this[int _Index]
@@ -88,18 +92,18 @@ public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
 
         #endregion
 
-        public abstract int CountActivated { get; }
-        public int CountDeactivated => Collection.Count - CountActivated;
-        public T FirstActive => GetFirstOrLastActiveOrInactive(true, true);
-        public T FirstInactive => GetFirstOrLastActiveOrInactive(true, false);
-        public T LastActive => GetFirstOrLastActiveOrInactive(false, true);
-        public T LastInactive => GetFirstOrLastActiveOrInactive(false, false);
+        public abstract int CountActivated   { get; }
+        public          int CountDeactivated => Count - CountActivated;
+        public          T   FirstActive      => GetFirstOrLastActiveOrInactive(true, true);
+        public          T   FirstInactive    => GetFirstOrLastActiveOrInactive(true, false);
+        public          T   LastActive       => GetFirstOrLastActiveOrInactive(false, true);
+        public          T   LastInactive     => GetFirstOrLastActiveOrInactive(false, false);
 
         public virtual void Activate(
-            T _Item,
+            T          _Item,
             Func<bool> _Predicate = null,
-            Action _OnFinish = null, 
-            bool _Forced = false)
+            Action     _OnFinish  = null,
+            bool       _Forced    = false)
         {
             int index = IndexOf(_Item);
             if (index == -1)
@@ -108,10 +112,10 @@ public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
         }
 
         public virtual void Deactivate(
-            T _Item,
+            T          _Item,
             Func<bool> _Predicate = null,
-            Action _OnFinish = null,
-            bool _Forced = false)
+            Action     _OnFinish  = null,
+            bool       _Forced    = false)
         {
             int index = IndexOf(_Item);
             if (index == -1)
@@ -132,35 +136,35 @@ public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
         public void ActivateAll(bool _Forced = false)
         {
             for (int idx = 0; idx < Count; idx++)
-                Activate(idx, _Forced : _Forced);
+                Activate(idx, _Forced: _Forced);
         }
 
         public void DeactivateAll(bool _Forced = false)
         {
             for (int idx = 0; idx < Count; idx++)
-                Deactivate(idx, _Forced : _Forced);
+                Deactivate(idx, _Forced: _Forced);
         }
 
         #endregion
-    
+
         #region nonpublic methods
-    
+
         private void Activate(int _Index, Func<bool> _Predicate = null, Action _OnFinish = null, bool _Forced = false)
         {
             ActivateOrDeactivate(_Index, _Predicate, _OnFinish, true, _Forced);
         }
-    
+
         private void Deactivate(int _Index, Func<bool> _Predicate = null, Action _OnFinish = null, bool _Forced = false)
         {
             ActivateOrDeactivate(_Index, _Predicate, _OnFinish, false, _Forced);
         }
 
         private void ActivateOrDeactivate(
-            int _Index,
-            Func<bool> _Predicate, 
-            Action _OnFinish, 
-            bool _Activate, 
-            bool _Forced)
+            int        _Index,
+            Func<bool> _Predicate,
+            Action     _OnFinish,
+            bool       _Activate,
+            bool       _Forced)
         {
             if (_Predicate == null)
             {
@@ -168,6 +172,7 @@ public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
                 _OnFinish?.Invoke();
                 return;
             }
+
             Cor.Run(Cor.WaitWhile(
                 _Predicate.Invoke,
                 () =>
@@ -176,10 +181,10 @@ public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
                     _OnFinish?.Invoke();
                 }));
         }
-    
+
         private void ActivateOrDeactivate(int _Index, bool _Activate, bool _Forced)
         {
-            if (!MathUtils.IsInRange(_Index, 0, Collection.Count - 1))
+            if (!MathUtils.IsInRange(_Index, 0, Count - 1))
                 return;
             var item = Collection[_Index];
             if (item == null)
@@ -192,10 +197,19 @@ public abstract class SpawnPoolBase<T> : ISpawnPool<T> where T : class
 
         private T GetFirstOrLastActiveOrInactive(bool _First, bool _Active)
         {
-            var collection = _First ? Collection : Collection.ToArray().Reverse();
-            return collection.FirstOrDefault(_Item => _Active ? IsActive(_Item) : !IsActive(_Item));
+            var collection = _First
+                ? Collection
+                : ((IEnumerable<T>) Collection).Reverse().ToList();
+            for (int i = 0; i < Count; i++)
+            {
+                var item = collection[i];
+                if (_Active ? IsActive(item) : !IsActive(item))
+                    return item;
+            }
+
+            return default;
         }
-        
+
         protected abstract void Activate(T _Item, bool _Active);
         protected abstract bool IsActive(T _Item);
 
