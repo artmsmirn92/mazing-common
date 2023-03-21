@@ -78,20 +78,34 @@ namespace mazing.common.Runtime.Managers.IAP
         {
             m_StoreController = _Controller;
             m_StoreExtensionProvider = _Extensions;
-            Dbg.Log($"{nameof(UnityIapShopManagerBase)} {nameof(OnInitialized)}");
+            Dbg.Log("Shop Manager Initialized Successfully!");
             base.Init();
         }
         
         public void OnInitializeFailed(InitializationFailureReason _Error)
         {
-            Dbg.LogWarning($"{nameof(OnInitializeFailed)}" +
-                           $" {nameof(InitializationFailureReason)}:" + _Error);
+            string fullMessage = "Shop Manager Initialization Failed!"
+                                 + "\n" + "Error: " + _Error;
+            Dbg.LogWarning(fullMessage);
         }
-        
+
+        public void OnInitializeFailed(InitializationFailureReason _Error, string? _Message)
+        {
+            string fullMessage = "Shop Manager Initialization Failed!"
+                                 + "\n" + "Error: " + _Error
+                                 + "\n" + "Message: " + _Message;
+            Dbg.LogWarning(fullMessage);
+        }
+
         public void OnPurchaseFailed(Product _Product, PurchaseFailureReason _FailureReason)
         {
-            Dbg.LogWarning($"{nameof(OnPurchaseFailed)}" +
-                           $" {nameof(PurchaseFailureReason)}:" + _FailureReason);
+            string fullMessage = "Product Purchase Failed!"
+                                 + "\n" + "Id: " + _Product.definition.id
+                                 + "\n" + "Type: " + _Product.definition.type
+                                 + "\n" + "Title: " + _Product.metadata.localizedTitle
+                                 + "\n" + "Price: " + _Product.metadata.localizedPriceString
+                                 + "\n" + "Failure Reason: " + _FailureReason;
+            Dbg.LogWarning(fullMessage);
         }
 
         public override void Purchase(int _Key)
@@ -146,7 +160,7 @@ namespace mazing.common.Runtime.Managers.IAP
                 Dbg.LogWarning("Failed to restore purchases: No internet connection.");
                 return;
             }
-            if (!IsInitialized())
+            if (!Initialized)
             {
                 string oopsText = LocalizationManager.GetTranslation("oops");
                 string failToRestoreText = LocalizationManager.GetTranslation("service_connection_error");
@@ -224,15 +238,10 @@ namespace mazing.common.Runtime.Managers.IAP
             var builder = ConfigurationBuilder.Instance(module);
             return builder;
         }
-        
-        private bool IsInitialized()
-        {
-            return m_StoreController != null && m_StoreExtensionProvider != null;
-        }
-        
+
         private void BuyProductID(string _ProductId)
         {
-            if (!IsInitialized())
+            if (!Initialized)
             {
                 string oopsText = LocalizationManager.GetTranslation("oops");
                 string failToBuyProduct = LocalizationManager.GetTranslation("service_connection_error");
@@ -254,7 +263,7 @@ namespace mazing.common.Runtime.Managers.IAP
         private void GetProductItemInfo(int _Key, ref IAP_ItemArgs _Args)
         {
             _Args.Result = () => EShopProductResult.Pending;
-            if (!IsInitialized())
+            if (!Initialized)
             {
                 Dbg.LogWarning($"{nameof(UnityIapShopManagerBase)}: Get Product Item Info Failed. Not initialized.");
                 _Args.Result = () => EShopProductResult.Fail;

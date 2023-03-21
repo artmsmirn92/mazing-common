@@ -1,13 +1,13 @@
 {
   "name": "com.mazing.common",
-  "version": "0.0.53",
+  "version": "0.0.54",
   "displayName": "Mazing Common",
   "description": "Mazing common library",
   "unity": "2021.3",
     "dependencies": {
     "com.unity.inputsystem": "1.4.4",
     "com.unity.textmeshpro": "3.0.6",
-    "com.unity.purchasing": "4.5.2",
+    "com.unity.purchasing": "4.7.0",
     "com.unity.mobile.notifications": "2.1.1",
     "com.unity.modules.androidjni": "1.0.0"
  },
