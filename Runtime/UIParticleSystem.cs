@@ -17,65 +17,61 @@ namespace mazing.common.Runtime
         public bool fixedTime = true;
 
         [Tooltip("Enables 3d rotation for the particles")]
-        public bool use3dRotation = false;
+        public bool use3dRotation;
 
-        private Transform _transform;
-        private ParticleSystem pSystem;
-        private ParticleSystem.Particle[] particles;
-        private UIVertex[] _quad = new UIVertex[4];
-        private Vector4 imageUV = Vector4.zero;
-        private ParticleSystem.TextureSheetAnimationModule textureSheetAnimation;
-        private int textureSheetAnimationFrames;
-        private Vector2 textureSheetAnimationFrameSize;
-        private ParticleSystemRenderer pRenderer;
-        private bool isInitialised = false;
+        [SerializeField] private Texture currentTexture;
+        
+        private readonly UIVertex[] m_Quad = new UIVertex[4];
 
-        private Material currentMaterial;
+        private ParticleSystem.TextureSheetAnimationModule m_TextureSheetAnimation;
+        private ParticleSystem.Particle[]                  m_Particles;
+        
+        private Transform              m_Transform;
+        private ParticleSystem         m_PSystem;
+        private Vector4                m_ImageUV = Vector4.zero;
+        private int                    m_TextureSheetAnimationFrames;
+        private Vector2                m_TextureSheetAnimationFrameSize;
+        private ParticleSystemRenderer m_PRenderer;
+        private bool                   m_IsInitialised;
+        private Material               m_CurrentMaterial;
 
-        private Texture currentTexture;
 
 #if UNITY_5_5_OR_NEWER
-        private ParticleSystem.MainModule mainModule;
+        private ParticleSystem.MainModule m_MainModule;
 #endif
 
-        public override Texture mainTexture
-        {
-            get
-            {
-                return currentTexture;
-            }
-        }
+        public override Texture mainTexture => currentTexture;
 
-        protected bool Initialize()
+        private bool Initialize()
         {
             // initialize members
-            if (_transform == null)
+            if (m_Transform == null)
             {
-                _transform = transform;
+                m_Transform = transform;
             }
-            if (pSystem == null)
+            if (m_PSystem == null)
             {
-                pSystem = GetComponent<ParticleSystem>();
+                m_PSystem = GetComponent<ParticleSystem>();
 
-                if (pSystem == null)
+                if (m_PSystem == null)
                 {
                     return false;
                 }
 
 #if UNITY_5_5_OR_NEWER
-                mainModule = pSystem.main;
-                if (pSystem.main.maxParticles > 14000)
+                m_MainModule = m_PSystem.main;
+                if (m_PSystem.main.maxParticles > 14000)
                 {
-                    mainModule.maxParticles = 14000;
+                    m_MainModule.maxParticles = 14000;
                 }
 #else
                     if (pSystem.maxParticles > 14000)
                         pSystem.maxParticles = 14000;
 #endif
 
-                pRenderer = pSystem.GetComponent<ParticleSystemRenderer>();
-                if (pRenderer != null)
-                    pRenderer.enabled = false;
+                m_PRenderer = m_PSystem.GetComponent<ParticleSystemRenderer>();
+                if (m_PRenderer != null)
+                    m_PRenderer.enabled = false;
 
                 if (material == null)
                 {
@@ -86,41 +82,41 @@ namespace mazing.common.Runtime
                     }
                 }
 
-                currentMaterial = material;
-                if (currentMaterial && currentMaterial.HasProperty("_MainTex"))
+                m_CurrentMaterial = material;
+                if (m_CurrentMaterial && m_CurrentMaterial.HasProperty("_MainTex"))
                 {
-                    currentTexture = currentMaterial.mainTexture;
+                    currentTexture = m_CurrentMaterial.mainTexture;
                     if (currentTexture == null)
                         currentTexture = Texture2D.whiteTexture;
                 }
-                material = currentMaterial;
+                material = m_CurrentMaterial;
                 // automatically set scaling
 #if UNITY_5_5_OR_NEWER
-                mainModule.scalingMode = ParticleSystemScalingMode.Hierarchy;
+                m_MainModule.scalingMode = ParticleSystemScalingMode.Hierarchy;
 #else
                     pSystem.scalingMode = ParticleSystemScalingMode.Hierarchy;
 #endif
 
-                particles = null;
+                m_Particles = null;
             }
 #if UNITY_5_5_OR_NEWER
-            if (particles == null)
-                particles = new ParticleSystem.Particle[pSystem.main.maxParticles];
+            if (m_Particles == null)
+                m_Particles = new ParticleSystem.Particle[m_PSystem.main.maxParticles];
 #else
                 if (particles == null)
                     particles = new ParticleSystem.Particle[pSystem.maxParticles];
 #endif
 
-            imageUV = new Vector4(0, 0, 1, 1);
+            m_ImageUV = new Vector4(0, 0, 1, 1);
 
             // prepare texture sheet animation
-            textureSheetAnimation = pSystem.textureSheetAnimation;
-            textureSheetAnimationFrames = 0;
-            textureSheetAnimationFrameSize = Vector2.zero;
-            if (textureSheetAnimation.enabled)
+            m_TextureSheetAnimation = m_PSystem.textureSheetAnimation;
+            m_TextureSheetAnimationFrames = 0;
+            m_TextureSheetAnimationFrameSize = Vector2.zero;
+            if (m_TextureSheetAnimation.enabled)
             {
-                textureSheetAnimationFrames = textureSheetAnimation.numTilesX * textureSheetAnimation.numTilesY;
-                textureSheetAnimationFrameSize = new Vector2(1f / textureSheetAnimation.numTilesX, 1f / textureSheetAnimation.numTilesY);
+                m_TextureSheetAnimationFrames = m_TextureSheetAnimation.numTilesX * m_TextureSheetAnimation.numTilesY;
+                m_TextureSheetAnimationFrameSize = new Vector2(1f / m_TextureSheetAnimation.numTilesX, 1f / m_TextureSheetAnimation.numTilesY);
             }
 
             return true;
@@ -132,7 +128,6 @@ namespace mazing.common.Runtime
             if (!Initialize())
                 enabled = false;
         }
-
 
         protected override void OnPopulateMesh(VertexHelper vh)
         {
@@ -153,36 +148,36 @@ namespace mazing.common.Runtime
                 return;
             }
 
-            if (!isInitialised && !pSystem.main.playOnAwake)
+            if (!m_IsInitialised && !m_PSystem.main.playOnAwake)
             {
-                pSystem.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
-                isInitialised = true;
+                m_PSystem.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
+                m_IsInitialised = true;
             }
 
             Vector2 temp = Vector2.zero;
             Vector2 corner1 = Vector2.zero;
             Vector2 corner2 = Vector2.zero;
             // iterate through current particles
-            int count = pSystem.GetParticles(particles);
+            int count = m_PSystem.GetParticles(m_Particles);
 
             for (int i = 0; i < count; ++i)
             {
-                ParticleSystem.Particle particle = particles[i];
+                ParticleSystem.Particle particle = m_Particles[i];
 
                 // get particle properties
 #if UNITY_5_5_OR_NEWER
-                Vector2 position = (mainModule.simulationSpace == ParticleSystemSimulationSpace.Local ? particle.position : _transform.InverseTransformPoint(particle.position));
+                Vector2 position = (m_MainModule.simulationSpace == ParticleSystemSimulationSpace.Local ? particle.position : m_Transform.InverseTransformPoint(particle.position));
 #else
                     Vector2 position = (pSystem.simulationSpace == ParticleSystemSimulationSpace.Local ? particle.position : _transform.InverseTransformPoint(particle.position));
 #endif
                 float rotation = -particle.rotation * Mathf.Deg2Rad;
                 float rotation90 = rotation + Mathf.PI / 2;
-                Color32 color = particle.GetCurrentColor(pSystem);
-                float size = particle.GetCurrentSize(pSystem) * 0.5f;
+                Color32 color = particle.GetCurrentColor(m_PSystem);
+                float size = particle.GetCurrentSize(m_PSystem) * 0.5f;
 
                 // apply scale
 #if UNITY_5_5_OR_NEWER
-                if (mainModule.scalingMode == ParticleSystemScalingMode.Shape)
+                if (m_MainModule.scalingMode == ParticleSystemScalingMode.Shape)
                     position /= canvas.scaleFactor;
 #else
                     if (pSystem.scalingMode == ParticleSystemScalingMode.Shape)
@@ -190,82 +185,82 @@ namespace mazing.common.Runtime
 #endif
 
                 // apply texture sheet animation
-                Vector4 particleUV = imageUV;
-                if (textureSheetAnimation.enabled)
+                Vector4 particleUV = m_ImageUV;
+                if (m_TextureSheetAnimation.enabled)
                 {
 #if UNITY_5_5_OR_NEWER
                     float frameProgress = 1 - (particle.remainingLifetime / particle.startLifetime);
 
-                    if (textureSheetAnimation.frameOverTime.curveMin != null)
+                    if (m_TextureSheetAnimation.frameOverTime.curveMin != null)
                     {
-                        frameProgress = textureSheetAnimation.frameOverTime.curveMin.Evaluate(1 - (particle.remainingLifetime / particle.startLifetime));
+                        frameProgress = m_TextureSheetAnimation.frameOverTime.curveMin.Evaluate(1 - (particle.remainingLifetime / particle.startLifetime));
                     }
-                    else if (textureSheetAnimation.frameOverTime.curve != null)
+                    else if (m_TextureSheetAnimation.frameOverTime.curve != null)
                     {
-                        frameProgress = textureSheetAnimation.frameOverTime.curve.Evaluate(1 - (particle.remainingLifetime / particle.startLifetime));
+                        frameProgress = m_TextureSheetAnimation.frameOverTime.curve.Evaluate(1 - (particle.remainingLifetime / particle.startLifetime));
                     }
-                    else if (textureSheetAnimation.frameOverTime.constant > 0)
+                    else if (m_TextureSheetAnimation.frameOverTime.constant > 0)
                     {
-                        frameProgress = textureSheetAnimation.frameOverTime.constant - (particle.remainingLifetime / particle.startLifetime);
+                        frameProgress = m_TextureSheetAnimation.frameOverTime.constant - (particle.remainingLifetime / particle.startLifetime);
                     }
 #else
                     float frameProgress = 1 - (particle.lifetime / particle.startLifetime);
 #endif
 
-                    frameProgress = Mathf.Repeat(frameProgress * textureSheetAnimation.cycleCount, 1);
+                    frameProgress = Mathf.Repeat(frameProgress * m_TextureSheetAnimation.cycleCount, 1);
                     int frame = 0;
 
-                    switch (textureSheetAnimation.animation)
+                    switch (m_TextureSheetAnimation.animation)
                     {
 
                         case ParticleSystemAnimationType.WholeSheet:
-                            frame = Mathf.FloorToInt(frameProgress * textureSheetAnimationFrames);
+                            frame = Mathf.FloorToInt(frameProgress * m_TextureSheetAnimationFrames);
                             break;
 
                         case ParticleSystemAnimationType.SingleRow:
-                            frame = Mathf.FloorToInt(frameProgress * textureSheetAnimation.numTilesX);
+                            frame = Mathf.FloorToInt(frameProgress * m_TextureSheetAnimation.numTilesX);
 
-                            int row = textureSheetAnimation.rowIndex;
+                            int row = m_TextureSheetAnimation.rowIndex;
                             //                    if (textureSheetAnimation.useRandomRow) { // FIXME - is this handled internally by rowIndex?
                             //                        row = Random.Range(0, textureSheetAnimation.numTilesY, using: particle.randomSeed);
                             //                    }
-                            frame += row * textureSheetAnimation.numTilesX;
+                            frame += row * m_TextureSheetAnimation.numTilesX;
                             break;
 
                     }
 
-                    frame %= textureSheetAnimationFrames;
+                    frame %= m_TextureSheetAnimationFrames;
 
-                    particleUV.x = (frame % textureSheetAnimation.numTilesX) * textureSheetAnimationFrameSize.x;
-                    particleUV.y = 1.0f - Mathf.FloorToInt(frame / textureSheetAnimation.numTilesX) * textureSheetAnimationFrameSize.y;
-                    particleUV.z = particleUV.x + textureSheetAnimationFrameSize.x;
-                    particleUV.w = particleUV.y + textureSheetAnimationFrameSize.y;
+                    particleUV.x = (frame % m_TextureSheetAnimation.numTilesX) * m_TextureSheetAnimationFrameSize.x;
+                    particleUV.y = 1.0f - Mathf.FloorToInt(frame / m_TextureSheetAnimation.numTilesX) * m_TextureSheetAnimationFrameSize.y;
+                    particleUV.z = particleUV.x + m_TextureSheetAnimationFrameSize.x;
+                    particleUV.w = particleUV.y + m_TextureSheetAnimationFrameSize.y;
                 }
 
                 temp.x = particleUV.x;
                 temp.y = particleUV.y;
 
-                _quad[0] = UIVertex.simpleVert;
-                _quad[0].color = color;
-                _quad[0].uv0 = temp;
+                m_Quad[0] = UIVertex.simpleVert;
+                m_Quad[0].color = color;
+                m_Quad[0].uv0 = temp;
 
                 temp.x = particleUV.x;
                 temp.y = particleUV.w;
-                _quad[1] = UIVertex.simpleVert;
-                _quad[1].color = color;
-                _quad[1].uv0 = temp;
+                m_Quad[1] = UIVertex.simpleVert;
+                m_Quad[1].color = color;
+                m_Quad[1].uv0 = temp;
 
                 temp.x = particleUV.z;
                 temp.y = particleUV.w;
-                _quad[2] = UIVertex.simpleVert;
-                _quad[2].color = color;
-                _quad[2].uv0 = temp;
+                m_Quad[2] = UIVertex.simpleVert;
+                m_Quad[2].color = color;
+                m_Quad[2].uv0 = temp;
 
                 temp.x = particleUV.z;
                 temp.y = particleUV.y;
-                _quad[3] = UIVertex.simpleVert;
-                _quad[3].color = color;
-                _quad[3].uv0 = temp;
+                m_Quad[3] = UIVertex.simpleVert;
+                m_Quad[3].color = color;
+                m_Quad[3].uv0 = temp;
 
                 if (rotation == 0)
                 {
@@ -277,16 +272,16 @@ namespace mazing.common.Runtime
 
                     temp.x = corner1.x;
                     temp.y = corner1.y;
-                    _quad[0].position = temp;
+                    m_Quad[0].position = temp;
                     temp.x = corner1.x;
                     temp.y = corner2.y;
-                    _quad[1].position = temp;
+                    m_Quad[1].position = temp;
                     temp.x = corner2.x;
                     temp.y = corner2.y;
-                    _quad[2].position = temp;
+                    m_Quad[2].position = temp;
                     temp.x = corner2.x;
                     temp.y = corner1.y;
-                    _quad[3].position = temp;
+                    m_Quad[3].position = temp;
                 }
                 else
                 {
@@ -294,14 +289,14 @@ namespace mazing.common.Runtime
                     {
                         // get particle properties
 #if UNITY_5_5_OR_NEWER
-                        Vector3 pos3d = (mainModule.simulationSpace == ParticleSystemSimulationSpace.Local ? particle.position : _transform.InverseTransformPoint(particle.position));
+                        Vector3 pos3d = (m_MainModule.simulationSpace == ParticleSystemSimulationSpace.Local ? particle.position : m_Transform.InverseTransformPoint(particle.position));
 #else
                         Vector3 pos3d = (pSystem.simulationSpace == ParticleSystemSimulationSpace.Local ? particle.position : _transform.InverseTransformPoint(particle.position));
 #endif
 
                         // apply scale
 #if UNITY_5_5_OR_NEWER
-                        if (mainModule.scalingMode == ParticleSystemScalingMode.Shape)
+                        if (m_MainModule.scalingMode == ParticleSystemScalingMode.Shape)
                             position /= canvas.scaleFactor;
 #else
                         if (pSystem.scalingMode == ParticleSystemScalingMode.Shape)
@@ -318,10 +313,10 @@ namespace mazing.common.Runtime
 
                         Quaternion particleRotation = Quaternion.Euler(particle.rotation3D);
 
-                        _quad[0].position = pos3d + particleRotation * verts[0];
-                        _quad[1].position = pos3d + particleRotation * verts[1];
-                        _quad[2].position = pos3d + particleRotation * verts[2];
-                        _quad[3].position = pos3d + particleRotation * verts[3];
+                        m_Quad[0].position = pos3d + particleRotation * verts[0];
+                        m_Quad[1].position = pos3d + particleRotation * verts[1];
+                        m_Quad[2].position = pos3d + particleRotation * verts[2];
+                        m_Quad[3].position = pos3d + particleRotation * verts[3];
                     }
                     else
                     {
@@ -329,14 +324,14 @@ namespace mazing.common.Runtime
                         Vector2 right = new Vector2(Mathf.Cos(rotation), Mathf.Sin(rotation)) * size;
                         Vector2 up = new Vector2(Mathf.Cos(rotation90), Mathf.Sin(rotation90)) * size;
 
-                        _quad[0].position = position - right - up;
-                        _quad[1].position = position - right + up;
-                        _quad[2].position = position + right + up;
-                        _quad[3].position = position + right - up;
+                        m_Quad[0].position = position - right - up;
+                        m_Quad[1].position = position - right + up;
+                        m_Quad[2].position = position + right + up;
+                        m_Quad[3].position = position + right - up;
                     }
                 }
 
-                vh.AddUIVertexQuad(_quad);
+                vh.AddUIVertexQuad(m_Quad);
             }
         }
 
@@ -344,13 +339,13 @@ namespace mazing.common.Runtime
         {
             if (!fixedTime && Application.isPlaying)
             {
-                pSystem.Simulate(Time.unscaledDeltaTime, false, false, true);
+                m_PSystem.Simulate(Time.unscaledDeltaTime, false, false, true);
                 SetAllDirty();
 
-                if ((currentMaterial != null && currentTexture != currentMaterial.mainTexture) ||
-                    (material != null && currentMaterial != null && material.shader != currentMaterial.shader))
+                if ((m_CurrentMaterial != null && currentTexture != m_CurrentMaterial.mainTexture) ||
+                    (material != null && m_CurrentMaterial != null && material.shader != m_CurrentMaterial.shader))
                 {
-                    pSystem = null;
+                    m_PSystem = null;
                     Initialize();
                 }
             }
@@ -366,41 +361,41 @@ namespace mazing.common.Runtime
             {
                 if (fixedTime)
                 {
-                    pSystem.Simulate(Time.unscaledDeltaTime, false, false, true);
+                    m_PSystem.Simulate(Time.unscaledDeltaTime, false, false, true);
                     SetAllDirty();
-                    if ((currentMaterial != null && currentTexture != currentMaterial.mainTexture) ||
-                        (material != null && currentMaterial != null && material.shader != currentMaterial.shader))
+                    if ((m_CurrentMaterial != null && currentTexture != m_CurrentMaterial.mainTexture) ||
+                        (material != null && m_CurrentMaterial != null && material.shader != m_CurrentMaterial.shader))
                     {
-                        pSystem = null;
+                        m_PSystem = null;
                         Initialize();
                     }
                 }
             }
-            if (material == currentMaterial)
+            if (material == m_CurrentMaterial)
                 return;
-            pSystem = null;
+            m_PSystem = null;
             Initialize();
         }
 
         protected override void OnDestroy()
         {
-            currentMaterial = null;
+            m_CurrentMaterial = null;
             currentTexture = null;
         }
 
         public void StartParticleEmission()
         {
-            pSystem.Play();
+            m_PSystem.Play();
         }
 
         public void StopParticleEmission()
         {
-            pSystem.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
+            m_PSystem.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
 
         public void PauseParticleEmission()
         {
-            pSystem.Stop(false, ParticleSystemStopBehavior.StopEmitting);
+            m_PSystem.Stop(false, ParticleSystemStopBehavior.StopEmitting);
         }
     }
 #endif

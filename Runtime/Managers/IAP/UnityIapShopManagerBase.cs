@@ -14,7 +14,8 @@ namespace mazing.common.Runtime.Managers.IAP
         Fail
     }
     
-    public class ShopItemArgs : EventArgs
+    // ReSharper disable once InconsistentNaming
+    public class IAP_ItemArgs : EventArgs
     {
         public decimal                  LocalizedPrice       { get; set; }
         public string                   LocalizedPriceString { get; set; }
@@ -22,9 +23,9 @@ namespace mazing.common.Runtime.Managers.IAP
         public bool                     HasReceipt           { get; set; }
         public Func<EShopProductResult> Result               { get; set; }
 
-        public ShopItemArgs() { }
+        public IAP_ItemArgs() { }
         
-        public ShopItemArgs(
+        public IAP_ItemArgs(
             decimal                  _LocalizedPrice,
             string                   _LocalizedPriceString,
             string                   _Currency,
@@ -118,9 +119,9 @@ namespace mazing.common.Runtime.Managers.IAP
             return false;
         }
 
-        public override ShopItemArgs GetItemInfo(int _Key)
+        public override IAP_ItemArgs GetItemInfo(int _Key)
         {
-            var res = new ShopItemArgs();
+            var res = new IAP_ItemArgs();
             GetProductItemInfo(_Key, ref res);
             return res;
         }
@@ -250,7 +251,7 @@ namespace mazing.common.Runtime.Managers.IAP
             m_StoreController.InitiatePurchase(product);
         }
 
-        private void GetProductItemInfo(int _Key, ref ShopItemArgs _Args)
+        private void GetProductItemInfo(int _Key, ref IAP_ItemArgs _Args)
         {
             _Args.Result = () => EShopProductResult.Pending;
             if (!IsInitialized())

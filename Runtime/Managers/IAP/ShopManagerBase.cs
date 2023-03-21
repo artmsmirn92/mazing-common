@@ -40,7 +40,7 @@ namespace mazing.common.Runtime.Managers.IAP
         public abstract void         RestorePurchases();
         public abstract void         Purchase(int _Key);
         public abstract bool         RateGame();
-        public abstract ShopItemArgs GetItemInfo(int       _Key);
+        public abstract IAP_ItemArgs GetItemInfo(int       _Key);
         public abstract void         AddPurchaseAction(int _ProductKey, UnityAction _Action);
         public abstract void         AddDeferredAction(int _ProductKey, UnityAction _Action);
 
