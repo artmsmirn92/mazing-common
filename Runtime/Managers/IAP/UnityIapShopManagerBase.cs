@@ -17,6 +17,7 @@ namespace mazing.common.Runtime.Managers.IAP
     // ReSharper disable once InconsistentNaming
     public class IAP_ItemArgs : EventArgs
     {
+        public int                      PurchaseKey          { get; set; }
         public decimal                  LocalizedPrice       { get; set; }
         public string                   LocalizedPriceString { get; set; }
         public string                   Currency             { get; set; }
@@ -24,20 +25,6 @@ namespace mazing.common.Runtime.Managers.IAP
         public Func<EShopProductResult> Result               { get; set; }
 
         public IAP_ItemArgs() { }
-        
-        public IAP_ItemArgs(
-            decimal                  _LocalizedPrice,
-            string                   _LocalizedPriceString,
-            string                   _Currency,
-            bool                     _HasReceipt,
-            Func<EShopProductResult> _Result)
-        {
-            LocalizedPrice       = _LocalizedPrice;
-            LocalizedPriceString = _LocalizedPriceString;
-            Currency             = _Currency;
-            HasReceipt           = _HasReceipt;
-            Result               = _Result;
-        }
     }
     
     public abstract class UnityIapShopManagerBase : ShopManagerBase, IStoreListener
@@ -262,6 +249,7 @@ namespace mazing.common.Runtime.Managers.IAP
 
         private void GetProductItemInfo(int _Key, ref IAP_ItemArgs _Args)
         {
+            _Args.PurchaseKey = _Key;
             _Args.Result = () => EShopProductResult.Pending;
             if (!Initialized)
             {
