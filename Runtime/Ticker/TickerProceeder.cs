@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using mazing.common.Runtime.Utils;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,9 +11,12 @@ namespace mazing.common.Runtime.Ticker
     {
         #region nonpublic members
 
-        private          bool                    m_Paused;
-        private          float                   m_Delta;
-        private          float                   m_FixedDelta;
+        private bool  m_Paused;
+        private float m_Delta;
+        private float m_FixedDelta;
+        private float m_PlayTimeInMinutesThisSession;
+        private float m_PlayTimeInMinutesTotal;
+        
         private readonly List<IUpdateTick>       m_UpdateInfoDict       = new List<IUpdateTick>();
         private readonly List<IFixedUpdateTick>  m_FixedUpdateInfoDict  = new List<IFixedUpdateTick>();
         private readonly List<ILateUpdateTick>   m_LateUpdateInfoDict   = new List<ILateUpdateTick>();
@@ -26,8 +31,18 @@ namespace mazing.common.Runtime.Ticker
 
         public event UnityAction Paused;
         public event UnityAction UnPaused;
-        public float             Time      { get; private set; }
-        public float             FixedTime { get; private set; }
+        public float             Time              { get; private set; }
+        public float             FixedTime         { get; private set; }
+
+        public float PlayTimeInMinutesTotal
+        {
+            get => m_PlayTimeInMinutesTotal;
+            private set
+            {
+                m_PlayTimeInMinutesTotal = value;
+                SaveUtils.PutValue(SaveKeysCommon.PlayTime, TimeSpan.FromMinutes(value));
+            }
+        }
 
         public bool Pause
         {
@@ -91,6 +106,11 @@ namespace mazing.common.Runtime.Ticker
 
         #region engine methods
 
+        private void Start()
+        {
+            m_PlayTimeInMinutesTotal = (float)SaveUtils.GetValue(SaveKeysCommon.PlayTime).TotalMinutes;
+        }
+
         private void Update()
         {
             if (m_Paused)
@@ -99,6 +119,12 @@ namespace mazing.common.Runtime.Ticker
                 return;
             }
             Time = UnityEngine.Time.time - m_Delta;
+            float  newTimeInMinutesThisSession = Time % 60;
+            if (!MathUtils.Equals(newTimeInMinutesThisSession, m_PlayTimeInMinutesThisSession))
+            {
+                PlayTimeInMinutesTotal += newTimeInMinutesThisSession - m_PlayTimeInMinutesThisSession;
+                m_PlayTimeInMinutesThisSession = newTimeInMinutesThisSession;
+            }
             for (int i = 0; i < m_UpdateInfoDict.Count; i++)
                 m_UpdateInfoDict[i]?.UpdateTick();
         }

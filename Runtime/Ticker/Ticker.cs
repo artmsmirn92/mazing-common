@@ -29,7 +29,11 @@ namespace mazing.common.Runtime.Ticker
     public interface IViewGameTicker  : IUnityTicker { }
     public interface IModelGameTicker : IUnityTicker { }
     public interface IUITicker        : IUnityTicker { }
-    public interface ICommonTicker    : IUnityTicker { }
+
+    public interface ICommonTicker : IUnityTicker
+    {
+        float PlayTimeInMinutes { get; }
+    }
 
     public interface ISystemTicker : ITicker, IInit
     {
@@ -51,10 +55,11 @@ namespace mazing.common.Runtime.Ticker
         }
         
         private TickerProceeder m_TickerProceeder;
-        private bool          m_TickerManagerInstantiated;
-        private string        Name => GetType().Name.WithSpaces();
 
-        private TickerProceeder TickerProceeder
+        private bool   m_TickerManagerInstantiated;
+        private string Name => GetType().Name.WithSpaces();
+
+        protected TickerProceeder TickerProceeder
         {
             get
             {
@@ -73,10 +78,11 @@ namespace mazing.common.Runtime.Ticker
         
         public event UnityAction Paused;
         public event UnityAction UnPaused;
-        public float             Time           => TickerProceeder.Time;
-        public float             DeltaTime      => UnityEngine.Time.deltaTime;
-        public float             FixedTime      => TickerProceeder.FixedTime;
-        public float             FixedDeltaTime => UnityEngine.Time.fixedDeltaTime;
+
+        public float Time           => TickerProceeder.Time;
+        public float DeltaTime      => UnityEngine.Time.deltaTime;
+        public float FixedTime      => TickerProceeder.FixedTime;
+        public float FixedDeltaTime => UnityEngine.Time.fixedDeltaTime;
 
         public bool Pause
         {
@@ -103,7 +109,10 @@ namespace mazing.common.Runtime.Ticker
     public class ViewGameTicker : Ticker, IViewGameTicker { }
     public class ModelGameTicker : Ticker, IModelGameTicker { }
     public class UITicker : Ticker, IUITicker { }
-    public class CommonTicker : Ticker, ICommonTicker { }
+    public class CommonTicker : Ticker, ICommonTicker
+    {
+        public float PlayTimeInMinutes => TickerProceeder.PlayTimeInMinutesTotal;
+    }
 
     public class SystemTicker : InitBase, ISystemTicker
     {
