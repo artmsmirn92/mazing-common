@@ -53,11 +53,7 @@ namespace mazing.common.Runtime.Managers.IAP
         protected string GetProductId(int _Key)
         {
             var product = Products.FirstOrDefault(_P => _P.PurchaseKey == _Key);
-            if (product != null) 
-                return product.Id;
-            Dbg.LogError($"{nameof(UnityIapShopManagerBase)}: " +
-                         $"Get Product Id failed. Product with key {_Key} does not exist");
-            return string.Empty;
+            return product != null ? product.Id : string.Empty;
         }
 
         #endregion
