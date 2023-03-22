@@ -15,16 +15,15 @@ namespace mazing.common.Runtime.Managers.IAP
     }
     
     // ReSharper disable once InconsistentNaming
-    public class IAP_ItemArgs : EventArgs
+    public class IAP_ProductInfo : ProductInfo
     {
-        public int                      PurchaseKey          { get; set; }
         public decimal                  LocalizedPrice       { get; set; }
         public string                   LocalizedPriceString { get; set; }
         public string                   Currency             { get; set; }
         public bool                     HasReceipt           { get; set; }
         public Func<EShopProductResult> Result               { get; set; }
 
-        public IAP_ItemArgs() { }
+        public IAP_ProductInfo() { }
     }
     
     public abstract class UnityIapShopManagerBase : ShopManagerBase, IStoreListener
@@ -120,9 +119,9 @@ namespace mazing.common.Runtime.Managers.IAP
             return false;
         }
 
-        public override IAP_ItemArgs GetItemInfo(int _Key)
+        public override IAP_ProductInfo GetItemInfo(int _Key)
         {
-            var res = new IAP_ItemArgs();
+            var res = new IAP_ProductInfo();
             GetProductItemInfo(_Key, ref res);
             return res;
         }
@@ -157,7 +156,7 @@ namespace mazing.common.Runtime.Managers.IAP
             }
             foreach (var product in Products.Where(_P => _P.Type == ProductType.NonConsumable))
             {
-                var info = GetItemInfo(product.Key);
+                var info = GetItemInfo(product.PurchaseKey);
                 Cor.Run(Cor.WaitWhile(
                     () => info.Result() == EShopProductResult.Pending,
                     () =>
@@ -166,9 +165,9 @@ namespace mazing.common.Runtime.Managers.IAP
                             return;
                         if (!info.HasReceipt)
                             return;
-                        if (!m_OnPurchaseActionsDictDict.ContainsKey(product.Key))
+                        if (!m_OnPurchaseActionsDictDict.ContainsKey(product.PurchaseKey))
                             return;
-                        var actionsList = m_OnPurchaseActionsDictDict[product.Key];
+                        var actionsList = m_OnPurchaseActionsDictDict[product.PurchaseKey];
                         foreach (var action in actionsList)
                             action?.Invoke();
                     }));
@@ -185,12 +184,12 @@ namespace mazing.common.Runtime.Managers.IAP
                 Dbg.LogError($"Product with id {id} does not have product");
                 return PurchaseProcessingResult.Complete;
             }
-            if (!m_OnPurchaseActionsDictDict.ContainsKey(info.Key))
+            if (!m_OnPurchaseActionsDictDict.ContainsKey(info.PurchaseKey))
             {
                 Dbg.LogWarning($"Product with id {id} does not have purchase action");
                 return PurchaseProcessingResult.Complete;
             }
-            var actionsList = m_OnPurchaseActionsDictDict[info.Key];
+            var actionsList = m_OnPurchaseActionsDictDict[info.PurchaseKey];
             foreach (var action in actionsList)
                 action?.Invoke();
             Dbg.Log($"ProcessPurchase: PASS. Product: '{_Args.purchasedProduct.definition.id}'");
@@ -247,7 +246,7 @@ namespace mazing.common.Runtime.Managers.IAP
             m_StoreController.InitiatePurchase(product);
         }
 
-        private void GetProductItemInfo(int _Key, ref IAP_ItemArgs _Args)
+        private void GetProductItemInfo(int _Key, ref IAP_ProductInfo _Args)
         {
             _Args.PurchaseKey = _Key;
             _Args.Result = () => EShopProductResult.Pending;
@@ -266,11 +265,11 @@ namespace mazing.common.Runtime.Managers.IAP
                 _Args.Result = () => EShopProductResult.Fail;
                 return;
             }
-            _Args.HasReceipt = product.hasReceipt;
-            _Args.Currency = product.metadata.isoCurrencyCode;
-            _Args.LocalizedPrice = product.metadata.localizedPrice;
+            _Args.HasReceipt           = product.hasReceipt;
+            _Args.Currency             = product.metadata.isoCurrencyCode;
+            _Args.LocalizedPrice       = product.metadata.localizedPrice;
             _Args.LocalizedPriceString = product.metadata.localizedPriceString;
-            _Args.Result = () => EShopProductResult.Success;
+            _Args.Result               = () => EShopProductResult.Success;
         }
         
         protected void OnDeferredPurchase(Product _Product)
@@ -282,12 +281,12 @@ namespace mazing.common.Runtime.Managers.IAP
                 Dbg.LogError($"Product with id {id} does not have product");
                 return;
             }
-            if (!m_OnPurchaseActionsDictDict.ContainsKey(info.Key))
+            if (!m_OnPurchaseActionsDictDict.ContainsKey(info.PurchaseKey))
             {
                 Dbg.LogWarning($"Product with id {id} does not have purchase action");
                 return;
             }
-            var actionsList = m_OnPurchaseActionsDictDict[info.Key];
+            var actionsList = m_OnPurchaseActionsDictDict[info.PurchaseKey];
             foreach (var action in actionsList)
             {
                 action?.Invoke();

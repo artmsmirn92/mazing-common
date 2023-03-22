@@ -9,7 +9,7 @@ namespace mazing.common.Runtime.Managers.IAP
         void         RestorePurchases();
         void         Purchase(int _Key);
         bool         RateGame();
-        IAP_ItemArgs GetItemInfo(int _Key);
+        IAP_ProductInfo GetItemInfo(int _Key);
         void         AddPurchaseAction(int _ProductKey, UnityAction _Action);
         void         AddDeferredAction(int _ProductKey, UnityAction _Action);
     }

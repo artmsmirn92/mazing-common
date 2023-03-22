@@ -8,15 +8,17 @@ namespace mazing.common.Runtime.Managers.IAP
 {
     public class ProductInfo
     {
-        public int         Key  { get; }
-        public string      Id   { get; }
-        public ProductType Type { get; }
+        public int         PurchaseKey { get; set; }
+        public string      Id          { get; set; }
+        public ProductType Type        { get; set; }
             
-        public ProductInfo(int _Key, string _Id, ProductType _Type)
+        public ProductInfo() { }
+        
+        public ProductInfo(int _PurchaseKey, string _Id, ProductType _Type)
         {
-            Key = _Key;
-            Id = _Id;
-            Type = _Type;
+            PurchaseKey  = _PurchaseKey;
+            Id           = _Id;
+            Type         = _Type;
         }
     }
     
@@ -40,7 +42,7 @@ namespace mazing.common.Runtime.Managers.IAP
         public abstract void         RestorePurchases();
         public abstract void         Purchase(int _Key);
         public abstract bool         RateGame();
-        public abstract IAP_ItemArgs GetItemInfo(int       _Key);
+        public abstract IAP_ProductInfo GetItemInfo(int       _Key);
         public abstract void         AddPurchaseAction(int _ProductKey, UnityAction _Action);
         public abstract void         AddDeferredAction(int _ProductKey, UnityAction _Action);
 
@@ -50,7 +52,7 @@ namespace mazing.common.Runtime.Managers.IAP
         
         protected string GetProductId(int _Key)
         {
-            var product = Products.FirstOrDefault(_P => _P.Key == _Key);
+            var product = Products.FirstOrDefault(_P => _P.PurchaseKey == _Key);
             if (product != null) 
                 return product.Id;
             Dbg.LogError($"{nameof(UnityIapShopManagerBase)}: " +
