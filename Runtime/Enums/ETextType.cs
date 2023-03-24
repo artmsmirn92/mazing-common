@@ -3,6 +3,8 @@
     public enum ETextType
     {
         GameUI,
-        MenuUI
+        MenuUI_H1,
+        MenuUI_H2,
+        MenuUI_H3
     }
 }

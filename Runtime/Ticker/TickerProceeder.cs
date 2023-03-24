@@ -119,7 +119,7 @@ namespace mazing.common.Runtime.Ticker
                 return;
             }
             Time = UnityEngine.Time.time - m_Delta;
-            float  newTimeInMinutesThisSession = Time % 60;
+            float newTimeInMinutesThisSession = Time % 60f;
             if (!MathUtils.Equals(newTimeInMinutesThisSession, m_PlayTimeInMinutesThisSession))
             {
                 PlayTimeInMinutesTotal += newTimeInMinutesThisSession - m_PlayTimeInMinutesThisSession;

@@ -52,7 +52,7 @@ namespace mazing.common.Runtime.UI
             CheckIfSerializedItemsNotNull();
             foreach (var text in texts.Where(_Text => _Text.IsNotNull()))
             {
-                var locTextInfo = new LocTextInfo(text, ETextType.MenuUI,
+                var locTextInfo = new LocTextInfo(text, ETextType.MenuUI_H1,
                     _TextLocalizationType: ETextLocalizationType.OnlyFont);
                 LocalizationManager.AddLocalization(locTextInfo);
             }
