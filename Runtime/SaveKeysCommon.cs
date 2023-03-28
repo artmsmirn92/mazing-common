@@ -17,9 +17,7 @@ namespace mazing.common.Runtime
         private static SaveKey<bool>     _settingMusicOn;
         private static SaveKey<bool>     _lowPerformanceDevice;
         private static SaveKey<bool>     _gameWasRated;
-        private static SaveKey<TimeSpan> _playTime;
 
-        
         public static SaveKey<int?> AccountId =>
             _accountId ??= new SaveKey<int?>(nameof(AccountId));
         
@@ -60,7 +58,6 @@ namespace mazing.common.Runtime
             _settingMusicOn          = null;
             _lowPerformanceDevice    = null;
             _gameWasRated            = null;
-            _playTime                = null;
             
             SaveUtils.PutValue(AccountId,               SaveUtils.GetValue(AccountId),              onlyCache);
             SaveUtils.PutValue(LastDbConnectionSuccess, SaveUtils.GetValue(LastDbConnectionSuccess),onlyCache);
@@ -71,7 +68,6 @@ namespace mazing.common.Runtime
             SaveUtils.PutValue(SettingMusicOn,          SaveUtils.GetValue(SettingMusicOn),         onlyCache);
             SaveUtils.PutValue(LowPerformanceDevice,    SaveUtils.GetValue(LowPerformanceDevice),   onlyCache);
             SaveUtils.PutValue(GameWasRated,            SaveUtils.GetValue(GameWasRated),           onlyCache);
-            SaveUtils.PutValue(PlayTime,                SaveUtils.GetValue(PlayTime),               onlyCache);
         }
 
         public static SaveKey<bool> GameWasRated => 
@@ -90,7 +86,5 @@ namespace mazing.common.Runtime
             _settingMusicOn ??= new SaveKey<bool>(nameof(SettingMusicOn));
         public static SaveKey<bool> LowPerformanceDevice =>
             _lowPerformanceDevice ??= new SaveKey<bool>(nameof(LowPerformanceDevice));
-        public static SaveKey<TimeSpan> PlayTime => 
-            _playTime ?? new SaveKey<TimeSpan>(nameof(PlayTime));
     }
 }

@@ -29,11 +29,7 @@ namespace mazing.common.Runtime.Ticker
     public interface IViewGameTicker  : IUnityTicker { }
     public interface IModelGameTicker : IUnityTicker { }
     public interface IUITicker        : IUnityTicker { }
-
-    public interface ICommonTicker : IUnityTicker
-    {
-        float PlayTimeInMinutes { get; }
-    }
+    public interface ICommonTicker    : IUnityTicker { }
 
     public interface ISystemTicker : ITicker, IInit
     {
@@ -109,10 +105,7 @@ namespace mazing.common.Runtime.Ticker
     public class ViewGameTicker : Ticker, IViewGameTicker { }
     public class ModelGameTicker : Ticker, IModelGameTicker { }
     public class UITicker : Ticker, IUITicker { }
-    public class CommonTicker : Ticker, ICommonTicker
-    {
-        public float PlayTimeInMinutes => TickerProceeder.PlayTimeInMinutesTotal;
-    }
+    public class CommonTicker : Ticker, ICommonTicker { }
 
     public class SystemTicker : InitBase, ISystemTicker
     {
