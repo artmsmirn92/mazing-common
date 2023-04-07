@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using mazing.common.Runtime.Utils;
+using Unity.Services.Core;
 using UnityEngine.Events;
 using UnityEngine.Purchasing;
 
@@ -57,7 +59,10 @@ namespace mazing.common.Runtime.Managers.IAP
         {
             if (Initialized)
                 return;
-            InitializePurchasing();
+            var task = InitializeGamingServices(
+                InitializePurchasing,
+                InitializePurchasing);
+            Task.Run(() => task);
         }
         
         public virtual void OnInitialized(IStoreController _Controller, IExtensionProvider _Extensions)
@@ -199,6 +204,31 @@ namespace mazing.common.Runtime.Managers.IAP
         #endregion
         
         #region nonpublic methods
+
+        private async Task InitializeGamingServices(
+            UnityAction _OnSucceedToInitialize,
+            UnityAction _OnFailedToInitialize)
+        {
+            try
+            {
+                var options = new InitializationOptions()
+                    .SetOption("environment", "production");
+                await UnityServices.InitializeAsync(options);
+                _OnSucceedToInitialize?.Invoke();
+            }
+            catch (Exception exception) {
+                Dbg.LogError(exception);
+                _OnFailedToInitialize?.Invoke();
+            }
+        }
+        
+        private void InitializePurchasing()
+        {
+            var builder = GetBuilder();
+            foreach (var kvp in Products)
+                builder.AddProduct(kvp.Id, kvp.Type);
+            UnityPurchasing.Initialize(this, builder);
+        }
         
         private void AddTransactionAction(int _ProductKey, UnityAction _Action, bool _Deferred)
         {
@@ -210,13 +240,7 @@ namespace mazing.common.Runtime.Managers.IAP
             actionsList.Add(_Action);
         }
         
-        private void InitializePurchasing()
-        {
-            var builder = GetBuilder();
-            foreach (var kvp in Products)
-                builder.AddProduct(kvp.Id, kvp.Type);
-            UnityPurchasing.Initialize(this, builder);
-        }
+
 
         protected virtual ConfigurationBuilder GetBuilder()
         {

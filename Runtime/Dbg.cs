@@ -17,6 +17,8 @@ namespace mazing.common.Runtime
 
     public static class Dbg
     {
+        public static UnityAction<Exception> OnLogException;
+        
         private static readonly ILogger   Logger    = Debug.unityLogger;
         private static          ELogLevel _logLevel = ELogLevel.Info;
 
@@ -76,12 +78,12 @@ namespace mazing.common.Runtime
                 Logger.Log(LogType.Error, "MGCE", _Message);
         }
         
-        public static void LogException(Exception _Exception)
+        public static void LogException<T>(T _Exception) where T : Exception
         {
             if (LogLevel < ELogLevel.Exception)
                 return;
             Logger.Log(LogType.Exception, "MGCX", _Exception.Message);
-            throw _Exception;
+            OnLogException?.Invoke(_Exception);
         }
 
         public static void LogZone(ELogLevel _LogLevel, UnityAction _Action)
