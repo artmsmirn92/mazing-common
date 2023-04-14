@@ -22,6 +22,8 @@ namespace mazing.common.Runtime.Utils
                  return RuntimePlatform.OSXPlayer;
 #elif UNITY_STANDALONE_WIN
                  return RuntimePlatform.WindowsPlayer;
+#elif UNITY_WEBGL
+                return RuntimePlatform.WebGLPlayer;
 #endif
             }
         }
