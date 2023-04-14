@@ -13,7 +13,8 @@
     "includePlatforms": [
         "Android",
         "Editor",
-        "iOS"
+        "iOS",
+        "WebGL"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
