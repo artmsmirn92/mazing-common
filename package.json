@@ -1,6 +1,6 @@
 {
   "name": "com.mazing.common",
-  "version": "0.0.64",
+  "version": "0.0.65",
   "displayName": "Mazing Common",
   "description": "Mazing common library",
   "unity": "2021.3",

@@ -34,6 +34,12 @@ namespace mazing.common.Runtime.Utils
                     return "iOS";
                 case RuntimePlatform.Android:
                     return "Android";
+                case RuntimePlatform.WebGLPlayer:
+                    return "WebGl";
+                case RuntimePlatform.WindowsPlayer:
+                    return "WindowsPlayer";
+                case RuntimePlatform.OSXPlayer:
+                    return "OSX";
                 default: return null;
             }
         }
