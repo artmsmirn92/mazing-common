@@ -19,7 +19,7 @@ namespace mazing.common.Runtime.Managers
     
     public interface IPrefabSetManager
     {
-        GameObject GetPrefab(string _PrefabSetName, string _PrefabName);
+        GameObject GetPrefab(string   _PrefabSetName, string _PrefabName);
 #if UNITY_EDITOR
         void SetPrefab(string _PrefabSetName, string _PrefabName, Object _Prefab);
 #endif
