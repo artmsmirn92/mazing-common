@@ -8,16 +8,18 @@ namespace mazing.common.Runtime.UI
     
     public interface IDialogPanel
     {
-        int               DialogViewerId     { get; }
-        EAppearingState   AppearingState     { get; set; }
-        RectTransform     PanelRectTransform { get; }
-        Animator          Animator           { get; }
+        bool            LoadOnFirstAppear  { get; set; }
+        int             DialogViewerId     { get; }
+        EAppearingState AppearingState     { get; set; }
+        RectTransform   PanelRectTransform { get; }
+        Animator        Animator           { get; }
         
         void              LoadPanel(RectTransform _Container, ClosePanelAction _OnClose);
     }
     
     public class DialogPanelFake : IDialogPanel
     {
+        public bool            LoadOnFirstAppear  { get; set; }
         public int             DialogViewerId     => default;
         public EAppearingState AppearingState     { get; set; } = EAppearingState.Dissapeared;
         public RectTransform   PanelRectTransform => null;
