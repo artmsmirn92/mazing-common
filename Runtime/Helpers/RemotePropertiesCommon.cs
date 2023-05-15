@@ -6,7 +6,6 @@ namespace mazing.common.Runtime.Helpers
     {
         bool                      DebugEnabled          { get; set; }
         List<string>              TestDeviceIdsForAdmob { get; set; }
-        IList<AdProviderInfo>     AdsProviders          { get; set; }
         IList<NotificationInfoEx> Notifications         { get; set; }  
     }
     
@@ -14,7 +13,6 @@ namespace mazing.common.Runtime.Helpers
     {
         public bool                      DebugEnabled          { get; set; }
         public List<string>              TestDeviceIdsForAdmob { get; set; }
-        public IList<AdProviderInfo>     AdsProviders          { get; set; }
         public IList<NotificationInfoEx> Notifications         { get; set; }  
     }
 }
