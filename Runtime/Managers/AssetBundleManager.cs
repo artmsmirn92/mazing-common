@@ -141,8 +141,10 @@ namespace mazing.common.Runtime.Managers
         
         private IEnumerator LoadBundle(string _BundleName)
         {
+#if !UNITY_WEBGL && UNITY_2022_1_OR_NEWER
             while (!Caching.ready)
                 yield return null;
+#endif
             string bundleVersionPath = $"{_BundleName}.unity3d.version";
             using var bundleVersionRequest = UnityWebRequest.Get(
                 GetRemotePath(bundleVersionPath));
