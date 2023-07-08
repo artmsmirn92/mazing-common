@@ -6,6 +6,15 @@ using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace mazing.common.Runtime.Utils
 {
+    #region dllimport
+
+#if !UNITY_EDITOR && UNITY_WEBGL
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern bool IsMobile();
+#endif
+
+    #endregion
+    
     public static class CommonUtils
     {
         public const float FpsThresholdLowPerformance = 30f;
@@ -112,5 +121,16 @@ namespace mazing.common.Runtime.Utils
         {
             return Animator.StringToHash(_String);
         }
+        
+#if UNITY_WEBGL
+        public static bool IsOnMobileWebGl()
+        {
+            bool isMobile = false;
+#if !UNITY_EDITOR
+            isMobile = IsMobile();
+#endif
+            return isMobile;
+        }
+#endif
     }
 }
