@@ -5,18 +5,18 @@ using MathUtils = mazing.common.Runtime.Utils.MathUtils;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace mazing.common.Runtime.Utils
-{
-    #region dllimport
+{    
+    public static class CommonUtils
+    {
+        #region dllimport
 
 #if !UNITY_EDITOR && UNITY_WEBGL
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern bool IsMobile();
 #endif
 
-    #endregion
+        #endregion
     
-    public static class CommonUtils
-    {
         public const float FpsThresholdLowPerformance = 30f;
         
         public static RuntimePlatform Platform 
