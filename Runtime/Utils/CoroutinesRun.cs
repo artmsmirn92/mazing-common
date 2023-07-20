@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using mazing.common.Runtime.Extensions;
 using mazing.common.Runtime.Helpers;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,7 +11,7 @@ namespace mazing.common.Runtime.Utils
     {
         #region nonpublic members
         
-        private static          CoroutinesRunnerMonoBeh _coroutineRunnerMonoBeh;
+        private static          MazingCoroutinesRunner _mazingCoroutineRunner;
         private static readonly List<IEnumerator>       RunningCoroutines = new List<IEnumerator>();
 
         #endregion
@@ -26,26 +27,26 @@ namespace mazing.common.Runtime.Utils
         {
             if (_Coroutine == null)
                 return;
-            if (_coroutineRunnerMonoBeh.isDestroyed)
+            if (_mazingCoroutineRunner.isDestroyed)
                 return;
             var facade = FacadeCoroutine(_Coroutine);
-            _coroutineRunnerMonoBeh.StartCoroutine(facade);
+            _mazingCoroutineRunner.StartCoroutine(facade);
         }
 
         public static void Stop(IEnumerator _Coroutine)
         {
             if (_Coroutine == null)
                 return;
-            if (_coroutineRunnerMonoBeh.isDestroyed)
+            if (_mazingCoroutineRunner.isDestroyed)
                 return;
             RunningCoroutines.Remove(_Coroutine);
-            _coroutineRunnerMonoBeh.StopCoroutine(_Coroutine);
+            _mazingCoroutineRunner.StopCoroutine(_Coroutine);
         }
 
         public static void RunSync(UnityAction _Action)
         {
-            _coroutineRunnerMonoBeh.Actions.Add(_Action);
-            _coroutineRunnerMonoBeh.mustRun = true;
+            _mazingCoroutineRunner.Actions.Add(_Action);
+            _mazingCoroutineRunner.mustRun = true;
         }
 
         public static bool IsRunning(IEnumerator _Coroutine)
@@ -71,8 +72,14 @@ namespace mazing.common.Runtime.Utils
         [RuntimeInitializeOnLoadMethod]
         private static void ResetState()
         {
+#if UNITY_EDITOR
             RunningCoroutines.Clear();
-            _coroutineRunnerMonoBeh = Object.FindObjectOfType<CoroutinesRunnerMonoBeh>();
+#endif
+            _mazingCoroutineRunner = Object.FindObjectOfType<MazingCoroutinesRunner>();
+            if (_mazingCoroutineRunner.IsNotNull())
+                return;
+            var go = new GameObject("MAZING Coroutines Runner");
+            _mazingCoroutineRunner = go.AddComponent<MazingCoroutinesRunner>();
         }
         
         #endregion

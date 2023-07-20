@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace mazing.common.Runtime.Helpers
 {
-    public class CoroutinesRunnerMonoBeh : MonoBehaviour
+    public class MazingCoroutinesRunner : MonoBehaviour
     {
         [HideInInspector] public          bool              isDestroyed;
         [HideInInspector] public volatile bool              mustRun;
