@@ -24,15 +24,20 @@ namespace mazing.common.Runtime.Extensions
             else
                 Object.Destroy(_Component);
         }
-
-        public static void DestroyChildrenSafe(this GameObject _GameObject, bool _CheckForNull = true)
+        
+        public static void DestroyChildrenSafe(this Transform _Transform, bool _CheckForNull = true)
         {
-            var children = _GameObject.transform.GetChildren()
+            var children = _Transform.GetChildren()
                 .Where(_T => !_T.IsNull())
                 .Select(_T => _T.gameObject)
                 .ToList();
             foreach (var child in children)
                 child.DestroySafe(_CheckForNull);
+        }
+        
+        public static void DestroyChildrenSafe(this GameObject _GameObject, bool _CheckForNull = true)
+        {
+            DestroyChildrenSafe(_GameObject.transform, _CheckForNull);
         }
     }
 }
