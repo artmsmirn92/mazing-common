@@ -2,7 +2,7 @@
 
 namespace mazing.common.Runtime.Helpers
 {
-    public class DontDestroyOnLoad : MonoBehaviour
+    public class DontDestroyOnLoadMonoBeh : MonoBehaviour
     {
         private void Awake()
         {

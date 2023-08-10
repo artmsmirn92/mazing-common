@@ -7,9 +7,25 @@ namespace mazing.common.Runtime.Helpers
 {
     public class MazingCoroutinesRunner : MonoBehaviour
     {
-        [HideInInspector] public          bool              isDestroyed;
-        [HideInInspector] public volatile bool              mustRun;
-        public readonly                   List<UnityAction> Actions = new List<UnityAction>();
+        #region serialized fields
+
+        [HideInInspector] public          bool isDestroyed;
+        [HideInInspector] public volatile bool mustRun;
+
+        #endregion
+
+        #region api
+
+        public readonly List<UnityAction> Actions = new();
+
+        #endregion
+
+        #region engine methods
+
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
 
         private void Update()
         {
@@ -33,5 +49,7 @@ namespace mazing.common.Runtime.Helpers
         {
             isDestroyed = true;
         }
+
+        #endregion
     }
 }

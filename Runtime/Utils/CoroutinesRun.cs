@@ -78,9 +78,8 @@ namespace mazing.common.Runtime.Utils
             _mazingCoroutineRunner = Object.FindObjectOfType<MazingCoroutinesRunner>();
             if (_mazingCoroutineRunner.IsNotNull())
                 return;
-            var go = new GameObject("MAZING Coroutines Runner");
+            var go = new GameObject("MAZING COROUTINES RUNNER");
             _mazingCoroutineRunner = go.AddComponent<MazingCoroutinesRunner>();
-            go.AddComponent<DontDestroyOnLoad>();
         }
         
         #endregion
